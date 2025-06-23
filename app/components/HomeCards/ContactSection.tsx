@@ -103,7 +103,7 @@ const ContactSection = () => {
             {/* Mobile Social Cards Grid - Visible only on mobile */}
             <div className="relative z-0 mb-8 grid grid-cols-2 gap-4 px-4 md:hidden">
               {/* GitHub */}
-              <a href="#" className="group">
+              <a href="https://github.com/lbovboe" className="group">
                 <div className="flex h-20 items-center justify-center rounded-xl border border-gray-300/60 bg-gradient-to-br from-gray-100 to-gray-200 shadow-lg backdrop-blur-xl transition-all duration-500 hover:scale-105 hover:border-gray-400/80 dark:border-gray-600/30 dark:from-gray-800 dark:to-gray-900 dark:hover:border-gray-400/50">
                   <Github className="h-8 w-8 text-gray-700 transition-transform duration-300 group-hover:scale-110 dark:text-white" />
                 </div>
