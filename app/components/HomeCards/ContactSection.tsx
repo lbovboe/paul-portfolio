@@ -174,7 +174,7 @@ const ContactSection = () => {
             <div className="relative hidden md:block">
               {/* GitHub - Top Left */}
               <div className="absolute -top-10 left-0 md:left-10 lg:left-20">
-                <a href="#" className="group">
+                <a href="https://github.com/lbovboe" className="group">
                   <div className="flex h-24 w-24 items-center justify-center rounded-2xl border border-gray-300/60 bg-gradient-to-br from-gray-100 to-gray-200 shadow-2xl backdrop-blur-xl transition-all duration-500 hover:scale-110 hover:border-gray-400/80 dark:border-gray-600/30 dark:from-gray-800 dark:to-gray-900 dark:hover:border-gray-400/50">
                     <Github className="h-10 w-10 text-gray-700 transition-transform duration-300 group-hover:scale-110 dark:text-white" />
                   </div>

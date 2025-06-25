@@ -8,13 +8,8 @@ const AnimatedIntroBanner = () => {
       {/* Content container - centered for optimal composition */}
       <div className="relative z-20 flex h-full items-center justify-center px-6 md:px-12 lg:px-16">
         {/* Desktop content */}
-        <div className="hidden w-full max-w-5xl md:block">
+        <div className="w-full max-w-5xl">
           <IntroText />
-        </div>
-
-        {/* Mobile content */}
-        <div className="flex w-full items-center justify-center md:hidden">
-          <IntroTextMobile />
         </div>
       </div>
     </div>
