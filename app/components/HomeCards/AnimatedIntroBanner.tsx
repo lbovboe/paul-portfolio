@@ -1,6 +1,6 @@
 'use client';
 import IntroText from '../tools/Animation/IntroText';
-import IntroTextMobile from './Mobile/IntroTextMobile';
+
 
 const AnimatedIntroBanner = () => {
   return (
