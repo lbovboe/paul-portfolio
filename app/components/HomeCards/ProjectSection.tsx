@@ -44,6 +44,29 @@ const projects: Project[] = [
     ],
   },
   {
+    title: 'AI Email Generator',
+    description:
+      'An intelligent email generation platform powered by advanced language models and prompt engineering techniques. Users can create professional email templates for various purposes including business communications, cold outreach, customer support, and personal correspondence. The platform leverages OpenAI API integration with fine-tuned prompts to generate contextually appropriate, well-structured emails. Features include template customization, tone adjustment, multiple email categories, and instant generation capabilities for enhanced productivity.',
+    projectUrl: 'https://email-generator-zeta.vercel.app/',
+    imageUrl: 'https://images.unsplash.com/photo-1551434678-e076c223a692?w=800&h=600&fit=crop&crop=center',
+    category: 'AI Tool',
+    status: 'Live',
+    gradient: 'from-purple-400 via-violet-400 to-indigo-400',
+    accentColor: 'purple',
+    technologies: [
+      'Next.js',
+      'React',
+      'TypeScript',
+      'OpenAI API',
+      'Prompt Engineering',
+      'TailwindCSS',
+      'Node.js',
+      'AI/ML',
+      'LLM Integration',
+      'Vercel',
+    ],
+  },
+  {
     title: 'Pickagoo Delivery Platform',
     description:
       'A comprehensive delivery management platform featuring multi-role access (customers, drivers, admins). Includes complete order lifecycle management, SingPass integration for verification, and enterprise-level features. Key functionalities: authentication, real-time order tracking, notifications, driver-customer matching, reviews & ratings, credibility scoring system, bulk order processing via Excel, and specialized company contract management for corporate clients.',
