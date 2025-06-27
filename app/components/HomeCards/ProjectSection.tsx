@@ -1,12 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import {
-  Zap,
-  ChevronRight,
-  ChevronLeft,
-  Eye,
-  ArrowUpRight,
-  Sparkles,
-} from 'lucide-react';
+import { Zap, ChevronRight, ChevronLeft, Eye, ArrowUpRight, Sparkles, Hand, Circle } from 'lucide-react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { SwiperRef } from 'swiper/react';
 import 'swiper/css';
@@ -61,18 +54,19 @@ const ProjectSection = () => {
     if (swiperInstance) {
       const currentIndex = swiperInstance.realIndex;
       setActiveIdx(currentIndex);
+      // Hide swipe hint after user swipes
+      setShowSwipeHint(false);
     }
   };
 
   // End of swiper section
   const [expandedCards, setExpandedCards] = useState<number[]>([]);
   const [isTruncated, setIsTruncated] = useState<boolean[]>([]);
+  const [showSwipeHint, setShowSwipeHint] = useState(true);
   const descriptionRefs = useRef<(HTMLParagraphElement | null)[]>([]);
 
   const toggleCard = (index: number) => {
-    setExpandedCards((prev) =>
-      prev.includes(index) ? prev.filter((i) => i !== index) : [...prev, index]
-    );
+    setExpandedCards((prev) => (prev.includes(index) ? prev.filter((i) => i !== index) : [...prev, index]));
   };
 
   /**
@@ -122,6 +116,17 @@ const ProjectSection = () => {
     };
   }, [projects]);
 
+  // Auto-hide swipe hint after 5 seconds (longer to ensure users see it)
+  useEffect(() => {
+    if (showSwipeHint && projects.length > 1) {
+      const timer = setTimeout(() => {
+        setShowSwipeHint(false);
+      }, 5000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [showSwipeHint, projects.length]);
+
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'Live':
@@ -166,9 +171,7 @@ const ProjectSection = () => {
         <div className="animate-fade-in text-center md:mb-10">
           <div className="mb-8 inline-flex items-center gap-3 rounded-full border border-blue-200/60 bg-white/70 px-6 py-3 shadow-lg backdrop-blur-xl dark:border-blue-700/60 dark:bg-slate-800/80">
             <Sparkles className="h-5 w-5 text-blue-500 dark:text-cyan-300" />
-            <span className="text-sm font-medium text-blue-700 dark:text-slate-200">
-              Featured Projects
-            </span>
+            <span className="text-sm font-medium text-blue-700 dark:text-slate-200">Featured Projects</span>
             <div className="h-2 w-2 rounded-full bg-blue-400 dark:bg-cyan-400"></div>
           </div>
 
@@ -176,7 +179,7 @@ const ProjectSection = () => {
             Personal Masterpieces
           </h2>
         </div>
-        {/* Navigation Buttons - Positioned at center of whole card with half extending outside */}
+        {/* Navigation Buttons - Hidden on mobile, visible on desktop */}
         {projects.length > 1 && (
           <>
             {/* Previous Button */}
@@ -185,7 +188,9 @@ const ProjectSection = () => {
                 e.stopPropagation();
                 handlePrevClick();
               }}
-              className="group/nav absolute left-0 top-1/2 z-20 -translate-x-1/2 -translate-y-1/2 rounded-full border border-blue-200/30 bg-white/90 p-4 shadow-lg backdrop-blur-xl transition-all duration-300 hover:scale-110 hover:bg-white hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-blue-500/50 dark:border-slate-600/30 dark:bg-slate-800/90 dark:hover:bg-slate-800"
+              className="group/nav absolute left-0 top-1/2 z-20 hidden -translate-x-1/2 -translate-y-1/2 rounded-full border border-blue-200/30
+               bg-white/90 p-4 shadow-lg backdrop-blur-xl transition-all duration-300 hover:scale-110
+                hover:bg-white hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-blue-500/50 dark:border-slate-600/30 dark:bg-slate-800/90 dark:hover:bg-slate-800 md:block"
               aria-label="Previous project"
             >
               <ChevronLeft className="h-6 w-6 text-slate-600 transition-transform duration-300 group-hover/nav:-translate-x-0.5 dark:text-slate-300" />
@@ -197,7 +202,9 @@ const ProjectSection = () => {
                 e.stopPropagation();
                 handleNextClick();
               }}
-              className="group/nav absolute right-0 top-1/2 z-20 -translate-y-1/2 translate-x-1/2 rounded-full border border-blue-200/30 bg-white/90 p-4 shadow-lg backdrop-blur-xl transition-all duration-300 hover:scale-110 hover:bg-white hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-blue-500/50 dark:border-slate-600/30 dark:bg-slate-800/90 dark:hover:bg-slate-800"
+              className="group/nav absolute right-0 top-1/2 z-20 hidden -translate-y-1/2 translate-x-1/2 rounded-full border
+               border-blue-200/30 bg-white/90 p-4 shadow-lg backdrop-blur-xl transition-all duration-300 hover:scale-110
+                hover:bg-white hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-blue-500/50 dark:border-slate-600/30 dark:bg-slate-800/90 dark:hover:bg-slate-800 md:block"
               aria-label="Next project"
             >
               <ChevronRight className="h-6 w-6 text-slate-600 transition-transform duration-300 group-hover/nav:translate-x-0.5 dark:text-slate-300" />
@@ -205,153 +212,174 @@ const ProjectSection = () => {
           </>
         )}
 
-        <Swiper
-          spaceBetween={0}
-          slidesPerView={1}
-          ref={swiperRef}
-          loop={true}
-          onSlideChange={handleSlideChange}
-        >
-          {projects !== undefined &&
-            projects !== null &&
-            projects.length > 0 &&
-            projects.map((project, index) => {
-              const accentColors = getAccentColors(project.accentColor);
-              return (
-                <SwiperSlide key={`img-${index}`} className="cursor-pointer">
-                  <div key={index} className="group relative xl:mx-24">
-                    {/* Main Card - CLICKABLE CARD FEATURE
-                        The entire card is clickable and redirects to the project URL.
-                        Event bubbling allows clicks anywhere on the card to trigger navigation,
-                        except for elements that use stopPropagation() to prevent it.
-                    */}
-                    <div
-                      className="relative flex h-full cursor-pointer flex-col overflow-hidden rounded-2xl border border-blue-200/50 bg-white/80 backdrop-blur-xl transition-all duration-500 group-hover:-translate-y-2 group-hover:border-blue-300/60 group-hover:bg-white/90 dark:border-slate-700/50 dark:bg-slate-900/80 dark:group-hover:border-cyan-400/60 dark:group-hover:bg-slate-900/90"
-                      onClick={() => handleCardClick(project.projectUrl)}
-                    >
-                      {/* Image Section */}
-                      <div className="relative h-80 overflow-hidden lg:h-96">
-                        <img
-                          src={project.imageUrl}
-                          alt={project.title}
-                          className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
-                        />
+        <div className="relative">
+          <Swiper spaceBetween={0} slidesPerView={1} ref={swiperRef} loop={true} onSlideChange={handleSlideChange}>
+            {projects !== undefined &&
+              projects !== null &&
+              projects.length > 0 &&
+              projects.map((project, index) => {
+                const accentColors = getAccentColors(project.accentColor);
+                return (
+                  <SwiperSlide key={`img-${index}`} className="cursor-pointer">
+                    <div key={index} className="group relative xl:mx-24">
+                      {/* Main Card - CLICKABLE CARD FEATURE
+                          The entire card is clickable and redirects to the project URL.
+                          Event bubbling allows clicks anywhere on the card to trigger navigation,
+                          except for elements that use stopPropagation() to prevent it.
+                      */}
+                      <div
+                        className="relative flex h-full cursor-pointer flex-col overflow-hidden rounded-2xl border border-blue-200/50 bg-white/80 backdrop-blur-xl transition-all duration-500 group-hover:-translate-y-2 group-hover:border-blue-300/60 group-hover:bg-white/90 dark:border-slate-700/50 dark:bg-slate-900/80 dark:group-hover:border-cyan-400/60 dark:group-hover:bg-slate-900/90"
+                        onClick={() => handleCardClick(project.projectUrl)}
+                      >
+                        {/* Image Section */}
+                        <div className="relative h-80 overflow-hidden lg:h-96">
+                          <img
+                            src={project.imageUrl}
+                            alt={project.title}
+                            className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                          />
 
-                        {/* Overlay */}
-                        <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 via-slate-900/20 to-transparent"></div>
+                          {/* Overlay */}
+                          <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 via-slate-900/20 to-transparent"></div>
 
-                        {/* Floating Action Button - CLICKABLE CARD FEATURE
+                          {/* Floating Action Button - CLICKABLE CARD FEATURE
                             Uses stopPropagation() to prevent triggering the card click when clicked.
                             This ensures users can click the button without also triggering card navigation.
                         */}
-                        <a
-                          href={project.projectUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          onClick={(e) => e.stopPropagation()}
-                          className={`absolute right-6 top-6 rounded-full border ${accentColors.border} ${accentColors.bg} p-3 shadow-lg backdrop-blur-xl transition-all duration-300 ${accentColors.hover} group/btn hover:scale-110`}
-                        >
-                          <ArrowUpRight
-                            className={`h-5 w-5 ${accentColors.text} transition-transform duration-300 group-hover/btn:rotate-12`}
-                          />
-                        </a>
-
-                        {/* Status Badge */}
-                        <div className="absolute bottom-6 left-6">
-                          <span
-                            className={`rounded-full border px-4 py-2 text-sm font-medium shadow-lg backdrop-blur-xl ${getStatusColor(project.status)}`}
+                          <a
+                            href={project.projectUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            onClick={(e) => e.stopPropagation()}
+                            className={`absolute right-6 top-6 rounded-full border ${accentColors.border} ${accentColors.bg} p-3 shadow-lg backdrop-blur-xl transition-all duration-300 ${accentColors.hover} group/btn hover:scale-110`}
                           >
-                            <div className="mr-2 inline-block h-2 w-2 rounded-full bg-current"></div>
-                            {project.status}
-                          </span>
-                        </div>
-                      </div>
-
-                      {/* Content Section */}
-                      <div className="relative flex-1 p-8 lg:p-10">
-                        {/* Header */}
-                        <div className="mb-6">
-                          <div className="mb-3 flex items-center justify-between">
-                            <h3 className="text-2xl font-bold text-slate-800 dark:text-cyan-200 lg:text-3xl">
-                              {project.title}
-                            </h3>
-                            <Eye
-                              className={`h-5 w-5 ${accentColors.text} opacity-0 transition-all duration-300 group-hover:opacity-100`}
+                            <ArrowUpRight
+                              className={`h-5 w-5 ${accentColors.text} transition-transform duration-300 group-hover/btn:rotate-12`}
                             />
+                          </a>
+
+                          {/* Status Badge */}
+                          <div className="absolute bottom-6 left-6">
+                            <span
+                              className={`rounded-full border px-4 py-2 text-sm font-medium shadow-lg backdrop-blur-xl ${getStatusColor(project.status)}`}
+                            >
+                              <div className="mr-2 inline-block h-2 w-2 rounded-full bg-current"></div>
+                              {project.status}
+                            </span>
                           </div>
-                          <p
-                            className={`text-sm font-medium ${accentColors.text}`}
-                          >
-                            {project.category}
-                          </p>
                         </div>
 
-                        {/* Description */}
-                        <div className="mb-8 flex-1">
-                          <p
-                            ref={(el) => {
-                              descriptionRefs.current[index] = el;
-                            }}
-                            className={`leading-relaxed text-slate-600 dark:text-slate-300 ${!expandedCards.includes(index) ? 'line-clamp-3' : ''}`}
-                          >
-                            {project.description}
-                          </p>
+                        {/* Content Section */}
+                        <div className="relative flex-1 p-8 lg:p-10">
+                          {/* Header */}
+                          <div className="mb-6">
+                            <div className="mb-3 flex items-center justify-between">
+                              <h3 className="text-2xl font-bold text-slate-800 dark:text-cyan-200 lg:text-3xl">
+                                {project.title}
+                              </h3>
+                              <Eye
+                                className={`h-5 w-5 ${accentColors.text} opacity-0 transition-all duration-300 group-hover:opacity-100`}
+                              />
+                            </div>
+                            <p className={`text-sm font-medium ${accentColors.text}`}>{project.category}</p>
+                          </div>
 
-                          {/* CONDITIONAL READ MORE FEATURE
+                          {/* Description */}
+                          <div className="mb-8 flex-1">
+                            <p
+                              ref={(el) => {
+                                descriptionRefs.current[index] = el;
+                              }}
+                              className={`leading-relaxed text-slate-600 dark:text-slate-300 ${!expandedCards.includes(index) ? 'line-clamp-3' : ''}`}
+                            >
+                              {project.description}
+                            </p>
+
+                            {/* CONDITIONAL READ MORE FEATURE
                               Only show "Read more" button when text actually exceeds 3 lines.
                               isTruncated[index] is true when scrollHeight > clientHeight for this description.
                           */}
-                          {isTruncated[index] && (
-                            <button
-                              onClick={(e) => {
-                                // CLICKABLE CARD FEATURE - stopPropagation prevents card click
-                                // This ensures "Read more" only toggles text, doesn't navigate to project
-                                e.stopPropagation();
-                                toggleCard(index);
-                              }}
-                              className={`group/read mt-4 inline-flex items-center gap-2 text-sm font-medium ${accentColors.text} transition-all duration-300 hover:translate-x-1 hover:text-slate-800 dark:hover:text-cyan-100`}
-                            >
-                              {expandedCards.includes(index)
-                                ? 'Show less'
-                                : 'Read more'}
-                              <ChevronRight
-                                className={`h-4 w-4 transition-transform duration-300 ${expandedCards.includes(index) ? 'rotate-90' : 'group-hover/read:translate-x-1'}`}
-                              />
-                            </button>
+                            {isTruncated[index] && (
+                              <button
+                                onClick={(e) => {
+                                  // CLICKABLE CARD FEATURE - stopPropagation prevents card click
+                                  // This ensures "Read more" only toggles text, doesn't navigate to project
+                                  e.stopPropagation();
+                                  toggleCard(index);
+                                }}
+                                className={`group/read mt-4 inline-flex items-center gap-2 text-sm font-medium ${accentColors.text} transition-all duration-300 hover:translate-x-1 hover:text-slate-800 dark:hover:text-cyan-100`}
+                              >
+                                {expandedCards.includes(index) ? 'Show less' : 'Read more'}
+                                <ChevronRight
+                                  className={`h-4 w-4 transition-transform duration-300 ${expandedCards.includes(index) ? 'rotate-90' : 'group-hover/read:translate-x-1'}`}
+                                />
+                              </button>
+                            )}
+                          </div>
+
+                          {/* Technologies */}
+                          {project.technologies && (
+                            <div className="hidden space-y-4 md:block">
+                              <div className={`flex items-center gap-2 ${accentColors.text}`}>
+                                <Zap className="h-4 w-4" />
+                                <span className="text-sm font-medium">Tech Arsenal</span>
+                              </div>
+
+                              <div className="flex flex-wrap gap-2">
+                                {project.technologies.map((tech, techIndex) => (
+                                  <span
+                                    key={techIndex}
+                                    className="rounded-full border border-blue-200/60 bg-blue-50/80 px-4 py-2 text-xs font-medium text-blue-500 shadow-sm backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 hover:scale-105 hover:border-blue-300/60 hover:bg-blue-100/80 hover:shadow-md dark:border-slate-700/60 dark:bg-slate-800/80 dark:text-cyan-200 dark:hover:border-cyan-400/60 dark:hover:bg-slate-900/80"
+                                  >
+                                    {tech}
+                                  </span>
+                                ))}
+                              </div>
+                            </div>
                           )}
                         </div>
-
-                        {/* Technologies */}
-                        {project.technologies && (
-                          <div className="hidden space-y-4 md:block">
-                            <div
-                              className={`flex items-center gap-2 ${accentColors.text}`}
-                            >
-                              <Zap className="h-4 w-4" />
-                              <span className="text-sm font-medium">
-                                Tech Arsenal
-                              </span>
-                            </div>
-
-                            <div className="flex flex-wrap gap-2">
-                              {project.technologies.map((tech, techIndex) => (
-                                <span
-                                  key={techIndex}
-                                  className="rounded-full border border-blue-200/60 bg-blue-50/80 px-4 py-2 text-xs font-medium text-blue-500 shadow-sm backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 hover:scale-105 hover:border-blue-300/60 hover:bg-blue-100/80 hover:shadow-md dark:border-slate-700/60 dark:bg-slate-800/80 dark:text-cyan-200 dark:hover:border-cyan-400/60 dark:hover:bg-slate-900/80"
-                                >
-                                  {tech}
-                                </span>
-                              ))}
-                            </div>
-                          </div>
-                        )}
                       </div>
                     </div>
-                  </div>
-                </SwiperSlide>
-              );
-            })}
-        </Swiper>
+                  </SwiperSlide>
+                );
+              })}
+          </Swiper>
+        </div>
+
+        {/* Mobile Swipe Indicator - Only visible on mobile, positioned outside Swiper */}
+        {projects.length > 1 && showSwipeHint && (
+          <div className="fixed bottom-8 left-1/2 z-50 block -translate-x-1/2 transform md:hidden">
+            <div className="animate-bounce rounded-xl border-2 border-blue-300/80 bg-blue-50/95 px-6 py-4 shadow-2xl backdrop-blur-xl dark:border-cyan-400/80 dark:bg-slate-800/95">
+              <div className="flex items-center gap-4">
+                {/* Swipe Gesture Indicator */}
+                <div className="flex items-center gap-2 text-blue-600 dark:text-cyan-300">
+                  <ChevronLeft className="h-5 w-5 animate-pulse" />
+                  <Hand className="h-6 w-6" />
+                  <ChevronRight className="h-5 w-5 animate-pulse" />
+                </div>
+
+                {/* Pagination Dots */}
+                <div className="flex items-center gap-2">
+                  {projects.map((_, index) => (
+                    <div
+                      key={index}
+                      className={`h-3 w-3 rounded-full transition-all duration-300 ${
+                        index === activeIdx
+                          ? 'scale-125 bg-blue-500 dark:bg-cyan-400'
+                          : 'bg-slate-300 dark:bg-slate-600'
+                      }`}
+                    />
+                  ))}
+                </div>
+              </div>
+
+              {/* Swipe Text */}
+              <p className="mt-2 text-center text-sm font-semibold text-blue-700 dark:text-cyan-200">
+                👆 Swipe to explore projects
+              </p>
+            </div>
+          </div>
+        )}
       </div>
     </section>
   );
