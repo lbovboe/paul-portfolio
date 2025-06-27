@@ -1,13 +1,13 @@
 import { useState, useEffect, useRef } from 'react';
-import { Zap, ChevronRight, ChevronLeft, Eye, ArrowUpRight, Sparkles, Hand, Circle } from 'lucide-react';
+import { Zap, ChevronRight, ChevronLeft, Eye, ArrowUpRight, Sparkles } from 'lucide-react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { SwiperRef } from 'swiper/react';
+import Image from 'next/image';
 import 'swiper/css';
-import { projects, type Project } from '../../constants/projectsData';
+import { projects } from '../../constants/projectsData';
 
 const ProjectSection = () => {
   // Swiper section
-  const [activeIdx, setActiveIdx] = useState(0);
   const swiperRef = useRef<SwiperRef>(null);
 
   useEffect(() => {
@@ -52,8 +52,6 @@ const ProjectSection = () => {
   const handleSlideChange = () => {
     const swiperInstance = swiperRef?.current?.swiper;
     if (swiperInstance) {
-      const currentIndex = swiperInstance.realIndex;
-      setActiveIdx(currentIndex);
       // Hide swipe hint after user swipes
       setShowSwipeHint(false);
     }
@@ -114,7 +112,7 @@ const ProjectSection = () => {
       clearTimeout(timer);
       window.removeEventListener('resize', handleResize);
     };
-  }, [projects]);
+  }, []);
 
   // Auto-hide swipe hint after 5 seconds (longer to ensure users see it)
   useEffect(() => {
@@ -125,7 +123,7 @@ const ProjectSection = () => {
 
       return () => clearTimeout(timer);
     }
-  }, [showSwipeHint, projects.length]);
+  }, [showSwipeHint]);
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -240,10 +238,11 @@ const ProjectSection = () => {
                       >
                         {/* Image Section */}
                         <div className="relative h-80 overflow-hidden lg:h-96">
-                          <img
+                          <Image
                             src={project.imageUrl}
                             alt={project.title}
-                            className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                            fill
+                            className="object-cover transition-transform duration-700 group-hover:scale-105"
                           />
 
                           {/* Overlay */}
