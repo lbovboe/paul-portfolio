@@ -178,6 +178,17 @@ const ProjectSection = () => {
           <h2 className="hidden bg-gradient-to-r from-blue-500 via-sky-500 to-cyan-500 bg-clip-text text-6xl font-bold text-transparent dark:from-cyan-200 dark:via-blue-200 dark:to-blue-100 md:block">
             Personal Masterpieces
           </h2>
+
+          {/* Swipe Instructions - Only show when there are multiple projects */}
+          {projects.length > 1 && (
+            <div className="animate-fade-in mx-auto mb-4 max-w-md md:hidden">
+              <div className="flex items-center justify-center gap-3 rounded-full border border-blue-200/60 bg-white/70 px-6 py-3 shadow-lg backdrop-blur-xl dark:border-blue-700/60 dark:bg-slate-800/80">
+                <span className="text-center text-sm font-medium text-slate-600 dark:text-slate-300">
+                  Swipe to explore more projects
+                </span>
+              </div>
+            </div>
+          )}
         </div>
         {/* Navigation Buttons - Hidden on mobile, visible on desktop */}
         {projects.length > 1 && (
@@ -188,9 +199,7 @@ const ProjectSection = () => {
                 e.stopPropagation();
                 handlePrevClick();
               }}
-              className="group/nav absolute left-0 top-1/2 z-20 hidden -translate-x-1/2 -translate-y-1/2 rounded-full border border-blue-200/30
-               bg-white/90 p-4 shadow-lg backdrop-blur-xl transition-all duration-300 hover:scale-110
-                hover:bg-white hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-blue-500/50 dark:border-slate-600/30 dark:bg-slate-800/90 dark:hover:bg-slate-800 md:block"
+              className="group/nav absolute left-0 top-1/2 z-20 hidden -translate-x-1/2 rounded-full border border-blue-200/30 bg-white/90 p-4 shadow-lg backdrop-blur-xl transition-all duration-300 hover:scale-110 hover:bg-white hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-blue-500/50 dark:border-slate-600/30 dark:bg-slate-800/90 dark:hover:bg-slate-800 md:block"
               aria-label="Previous project"
             >
               <ChevronLeft className="h-6 w-6 text-slate-600 transition-transform duration-300 group-hover/nav:-translate-x-0.5 dark:text-slate-300" />
@@ -202,9 +211,7 @@ const ProjectSection = () => {
                 e.stopPropagation();
                 handleNextClick();
               }}
-              className="group/nav absolute right-0 top-1/2 z-20 hidden -translate-y-1/2 translate-x-1/2 rounded-full border
-               border-blue-200/30 bg-white/90 p-4 shadow-lg backdrop-blur-xl transition-all duration-300 hover:scale-110
-                hover:bg-white hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-blue-500/50 dark:border-slate-600/30 dark:bg-slate-800/90 dark:hover:bg-slate-800 md:block"
+              className="group/nav absolute right-0 top-1/2 z-20 hidden translate-x-1/2 rounded-full border border-blue-200/30 bg-white/90 p-4 shadow-lg backdrop-blur-xl transition-all duration-300 hover:scale-110 hover:bg-white hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-blue-500/50 dark:border-slate-600/30 dark:bg-slate-800/90 dark:hover:bg-slate-800 md:block"
               aria-label="Next project"
             >
               <ChevronRight className="h-6 w-6 text-slate-600 transition-transform duration-300 group-hover/nav:translate-x-0.5 dark:text-slate-300" />
@@ -345,41 +352,6 @@ const ProjectSection = () => {
               })}
           </Swiper>
         </div>
-
-        {/* Mobile Swipe Indicator - Only visible on mobile, positioned outside Swiper */}
-        {projects.length > 1 && showSwipeHint && (
-          <div className="fixed bottom-8 left-1/2 z-50 block -translate-x-1/2 transform md:hidden">
-            <div className="animate-bounce rounded-xl border-2 border-blue-300/80 bg-blue-50/95 px-6 py-4 shadow-2xl backdrop-blur-xl dark:border-cyan-400/80 dark:bg-slate-800/95">
-              <div className="flex items-center gap-4">
-                {/* Swipe Gesture Indicator */}
-                <div className="flex items-center gap-2 text-blue-600 dark:text-cyan-300">
-                  <ChevronLeft className="h-5 w-5 animate-pulse" />
-                  <Hand className="h-6 w-6" />
-                  <ChevronRight className="h-5 w-5 animate-pulse" />
-                </div>
-
-                {/* Pagination Dots */}
-                <div className="flex items-center gap-2">
-                  {projects.map((_, index) => (
-                    <div
-                      key={index}
-                      className={`h-3 w-3 rounded-full transition-all duration-300 ${
-                        index === activeIdx
-                          ? 'scale-125 bg-blue-500 dark:bg-cyan-400'
-                          : 'bg-slate-300 dark:bg-slate-600'
-                      }`}
-                    />
-                  ))}
-                </div>
-              </div>
-
-              {/* Swipe Text */}
-              <p className="mt-2 text-center text-sm font-semibold text-blue-700 dark:text-cyan-200">
-                👆 Swipe to explore projects
-              </p>
-            </div>
-          </div>
-        )}
       </div>
     </section>
   );
