@@ -1,5 +1,12 @@
 import { useState, useEffect, useRef } from 'react';
-import { Zap, ChevronRight, ChevronLeft, Eye, ArrowUpRight, Sparkles } from 'lucide-react';
+import {
+  Zap,
+  ChevronRight,
+  ChevronLeft,
+  Eye,
+  ArrowUpRight,
+  Sparkles,
+} from 'lucide-react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { SwiperRef } from 'swiper/react';
 import 'swiper/css';
@@ -63,7 +70,9 @@ const ProjectSection = () => {
   const descriptionRefs = useRef<(HTMLParagraphElement | null)[]>([]);
 
   const toggleCard = (index: number) => {
-    setExpandedCards((prev) => (prev.includes(index) ? prev.filter((i) => i !== index) : [...prev, index]));
+    setExpandedCards((prev) =>
+      prev.includes(index) ? prev.filter((i) => i !== index) : [...prev, index]
+    );
   };
 
   /**
@@ -157,7 +166,9 @@ const ProjectSection = () => {
         <div className="animate-fade-in text-center md:mb-10">
           <div className="mb-8 inline-flex items-center gap-3 rounded-full border border-blue-200/60 bg-white/70 px-6 py-3 shadow-lg backdrop-blur-xl dark:border-blue-700/60 dark:bg-slate-800/80">
             <Sparkles className="h-5 w-5 text-blue-500 dark:text-cyan-300" />
-            <span className="text-sm font-medium text-blue-700 dark:text-slate-200">Featured Projects</span>
+            <span className="text-sm font-medium text-blue-700 dark:text-slate-200">
+              Featured Projects
+            </span>
             <div className="h-2 w-2 rounded-full bg-blue-400 dark:bg-cyan-400"></div>
           </div>
 
@@ -165,8 +176,42 @@ const ProjectSection = () => {
             Personal Masterpieces
           </h2>
         </div>
+        {/* Navigation Buttons - Positioned at center of whole card with half extending outside */}
+        {projects.length > 1 && (
+          <>
+            {/* Previous Button */}
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                handlePrevClick();
+              }}
+              className="group/nav absolute left-0 top-1/2 z-20 -translate-x-1/2 -translate-y-1/2 rounded-full border border-blue-200/30 bg-white/90 p-4 shadow-lg backdrop-blur-xl transition-all duration-300 hover:scale-110 hover:bg-white hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-blue-500/50 dark:border-slate-600/30 dark:bg-slate-800/90 dark:hover:bg-slate-800"
+              aria-label="Previous project"
+            >
+              <ChevronLeft className="h-6 w-6 text-slate-600 transition-transform duration-300 group-hover/nav:-translate-x-0.5 dark:text-slate-300" />
+            </button>
 
-        <Swiper spaceBetween={0} slidesPerView={1} ref={swiperRef} loop={true} onSlideChange={handleSlideChange}>
+            {/* Next Button */}
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                handleNextClick();
+              }}
+              className="group/nav absolute right-0 top-1/2 z-20 -translate-y-1/2 translate-x-1/2 rounded-full border border-blue-200/30 bg-white/90 p-4 shadow-lg backdrop-blur-xl transition-all duration-300 hover:scale-110 hover:bg-white hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-blue-500/50 dark:border-slate-600/30 dark:bg-slate-800/90 dark:hover:bg-slate-800"
+              aria-label="Next project"
+            >
+              <ChevronRight className="h-6 w-6 text-slate-600 transition-transform duration-300 group-hover/nav:translate-x-0.5 dark:text-slate-300" />
+            </button>
+          </>
+        )}
+
+        <Swiper
+          spaceBetween={0}
+          slidesPerView={1}
+          ref={swiperRef}
+          loop={true}
+          onSlideChange={handleSlideChange}
+        >
           {projects !== undefined &&
             projects !== null &&
             projects.length > 0 &&
@@ -175,35 +220,6 @@ const ProjectSection = () => {
               return (
                 <SwiperSlide key={`img-${index}`} className="cursor-pointer">
                   <div key={index} className="group relative xl:mx-24">
-                    {/* Navigation Buttons - Positioned at center of whole card with half extending outside */}
-                    {projects.length > 1 && (
-                      <>
-                        {/* Previous Button */}
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handlePrevClick();
-                          }}
-                          className="group/nav absolute left-0 top-1/2 z-20 -translate-x-1/2 -translate-y-1/2 rounded-full border border-blue-200/30 bg-white/90 p-4 shadow-lg backdrop-blur-xl transition-all duration-300 hover:scale-110 hover:bg-white hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-blue-500/50 dark:border-slate-600/30 dark:bg-slate-800/90 dark:hover:bg-slate-800"
-                          aria-label="Previous project"
-                        >
-                          <ChevronLeft className="h-6 w-6 text-slate-600 transition-transform duration-300 group-hover/nav:-translate-x-0.5 dark:text-slate-300" />
-                        </button>
-
-                        {/* Next Button */}
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleNextClick();
-                          }}
-                          className="group/nav absolute right-0 top-1/2 z-20 -translate-y-1/2 translate-x-1/2 rounded-full border border-blue-200/30 bg-white/90 p-4 shadow-lg backdrop-blur-xl transition-all duration-300 hover:scale-110 hover:bg-white hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-blue-500/50 dark:border-slate-600/30 dark:bg-slate-800/90 dark:hover:bg-slate-800"
-                          aria-label="Next project"
-                        >
-                          <ChevronRight className="h-6 w-6 text-slate-600 transition-transform duration-300 group-hover/nav:translate-x-0.5 dark:text-slate-300" />
-                        </button>
-                      </>
-                    )}
-
                     {/* Main Card - CLICKABLE CARD FEATURE
                         The entire card is clickable and redirects to the project URL.
                         Event bubbling allows clicks anywhere on the card to trigger navigation,
@@ -263,7 +279,11 @@ const ProjectSection = () => {
                               className={`h-5 w-5 ${accentColors.text} opacity-0 transition-all duration-300 group-hover:opacity-100`}
                             />
                           </div>
-                          <p className={`text-sm font-medium ${accentColors.text}`}>{project.category}</p>
+                          <p
+                            className={`text-sm font-medium ${accentColors.text}`}
+                          >
+                            {project.category}
+                          </p>
                         </div>
 
                         {/* Description */}
@@ -291,7 +311,9 @@ const ProjectSection = () => {
                               }}
                               className={`group/read mt-4 inline-flex items-center gap-2 text-sm font-medium ${accentColors.text} transition-all duration-300 hover:translate-x-1 hover:text-slate-800 dark:hover:text-cyan-100`}
                             >
-                              {expandedCards.includes(index) ? 'Show less' : 'Read more'}
+                              {expandedCards.includes(index)
+                                ? 'Show less'
+                                : 'Read more'}
                               <ChevronRight
                                 className={`h-4 w-4 transition-transform duration-300 ${expandedCards.includes(index) ? 'rotate-90' : 'group-hover/read:translate-x-1'}`}
                               />
@@ -302,9 +324,13 @@ const ProjectSection = () => {
                         {/* Technologies */}
                         {project.technologies && (
                           <div className="hidden space-y-4 md:block">
-                            <div className={`flex items-center gap-2 ${accentColors.text}`}>
+                            <div
+                              className={`flex items-center gap-2 ${accentColors.text}`}
+                            >
                               <Zap className="h-4 w-4" />
-                              <span className="text-sm font-medium">Tech Arsenal</span>
+                              <span className="text-sm font-medium">
+                                Tech Arsenal
+                              </span>
                             </div>
 
                             <div className="flex flex-wrap gap-2">
