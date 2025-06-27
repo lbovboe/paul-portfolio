@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { Zap, ChevronRight, Eye, ArrowUpRight, Sparkles } from 'lucide-react';
+import { Zap, ChevronRight, ChevronLeft, Eye, ArrowUpRight, Sparkles } from 'lucide-react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { SwiperRef } from 'swiper/react';
 import 'swiper/css';
@@ -7,36 +7,21 @@ import { projects, type Project } from '../../constants/projectsData';
 
 const ProjectSection = () => {
   // Swiper section
-
   const [activeIdx, setActiveIdx] = useState(0);
   const swiperRef = useRef<SwiperRef>(null);
-  const intervalRef = useRef<NodeJS.Timeout | null>(null);
-  const [isHovered, setIsHovered] = useState(false);
 
   useEffect(() => {
     const swiperInstance = swiperRef?.current?.swiper;
     if (swiperInstance) {
       swiperInstance.on('slideChange', handleSlideChange);
     }
-    // Function to start interval
-    const startInterval = () => {
-      if (intervalRef.current) clearInterval(intervalRef.current);
-      intervalRef.current = setInterval(() => {
-        handleNextClick();
-      }, 2000);
-    };
-    // Start interval if not hovered
-    if (!isHovered) {
-      startInterval();
-    }
+
     return () => {
-      if (intervalRef.current) clearInterval(intervalRef.current);
       if (swiperInstance) {
         swiperInstance.off('slideChange', handleSlideChange);
       }
     };
-    // Depend on isHovered
-  }, [isHovered]);
+  }, []);
 
   const handleNextClick = () => {
     const swiperInstance = swiperRef?.current?.swiper;
@@ -51,10 +36,16 @@ const ProjectSection = () => {
     }
   };
 
-  const handleBtnClick = (v: number) => {
+  const handlePrevClick = () => {
     const swiperInstance = swiperRef?.current?.swiper;
     if (swiperInstance) {
-      swiperInstance.slideToLoop(v);
+      const currentIndex = swiperInstance.activeIndex;
+      const slidesCount = swiperInstance.slides.length;
+      if (currentIndex === 0) {
+        swiperInstance.slideToLoop(slidesCount - 1);
+      } else {
+        swiperInstance.slidePrev();
+      }
     }
   };
 
@@ -82,6 +73,7 @@ const ProjectSection = () => {
    * This function is called when user clicks anywhere on the card EXCEPT:
    * - The "Read more" button (uses stopPropagation to prevent card click)
    * - The floating action button (uses stopPropagation to prevent double navigation)
+   * - The navigation buttons (uses stopPropagation to prevent card click)
    */
   const handleCardClick = (projectUrl: string) => {
     window.open(projectUrl, '_blank', 'noopener,noreferrer');
@@ -181,12 +173,7 @@ const ProjectSection = () => {
             projects.map((project, index) => {
               const accentColors = getAccentColors(project.accentColor);
               return (
-                <SwiperSlide
-                  key={`img-${index}`}
-                  className="cursor-pointer"
-                  onMouseEnter={() => setIsHovered(true)}
-                  onMouseLeave={() => setIsHovered(false)}
-                >
+                <SwiperSlide key={`img-${index}`} className="cursor-pointer">
                   <div key={index} className="group relative xl:mx-24">
                     {/* Main Card - CLICKABLE CARD FEATURE
                         The entire card is clickable and redirects to the project URL.
@@ -207,6 +194,35 @@ const ProjectSection = () => {
 
                         {/* Overlay */}
                         <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 via-slate-900/20 to-transparent"></div>
+
+                        {/* Navigation Buttons */}
+                        {projects.length > 1 && (
+                          <>
+                            {/* Previous Button */}
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handlePrevClick();
+                              }}
+                              className="group/nav absolute left-4 top-1/2 -translate-y-1/2 rounded-full border border-white/20 bg-white/10 p-3 backdrop-blur-xl transition-all duration-300 hover:scale-110 hover:bg-white/20 focus:outline-none focus:ring-2 focus:ring-white/50"
+                              aria-label="Previous project"
+                            >
+                              <ChevronLeft className="h-5 w-5 text-white transition-transform duration-300 group-hover/nav:-translate-x-0.5" />
+                            </button>
+
+                            {/* Next Button */}
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleNextClick();
+                              }}
+                              className="group/nav absolute right-4 top-1/2 -translate-y-1/2 rounded-full border border-white/20 bg-white/10 p-3 backdrop-blur-xl transition-all duration-300 hover:scale-110 hover:bg-white/20 focus:outline-none focus:ring-2 focus:ring-white/50"
+                              aria-label="Next project"
+                            >
+                              <ChevronRight className="h-5 w-5 text-white transition-transform duration-300 group-hover/nav:translate-x-0.5" />
+                            </button>
+                          </>
+                        )}
 
                         {/* Floating Action Button - CLICKABLE CARD FEATURE
                             Uses stopPropagation() to prevent triggering the card click when clicked.
@@ -310,25 +326,6 @@ const ProjectSection = () => {
               );
             })}
         </Swiper>
-        <div className="mt-[15px] flex justify-center">
-          <div className="bg-bg-color flex justify-center rounded-[5px] px-[20px] py-[5px]">
-            {projects.map((v, index) => {
-              return (
-                <div
-                  key={`news-tag-${index}`}
-                  className="group flex h-[15px] cursor-pointer items-center justify-center px-[4px]"
-                  onClick={() => handleBtnClick(index)}
-                >
-                  <i
-                    className={`block h-[8px] w-[8px] rounded-full group-hover:scale-150 ${
-                      activeIdx == index ? `bg-blue-600` : `bg-blue-600/20`
-                    }`}
-                  ></i>
-                </div>
-              );
-            })}
-          </div>
-        </div>
       </div>
     </section>
   );
