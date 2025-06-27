@@ -139,6 +139,31 @@ const projects: Project[] = [
       'Vercel',
     ],
   },
+  {
+    title: 'Agentic Weather Chatbot',
+    description:
+      'An intelligent conversational AI system that leverages advanced language models and sophisticated prompt engineering to provide contextually aware weather information and insights. The chatbot utilizes function calling capabilities to orchestrate multiple weather APIs, tools, and services, delivering personalized responses based on user location, preferences, and historical interaction patterns. Features include multi-turn conversations, real-time weather data integration, predictive analytics for weather trends, natural language processing for complex queries, and adaptive learning from user interactions to improve response accuracy and relevance over time.',
+    projectUrl: 'https://weather-chatbot-demo.vercel.app',
+    imageUrl: 'https://images.unsplash.com/photo-1504608524841-42fe6f032b4b?w=800&h=600&fit=crop&crop=center',
+    category: 'AI Weather Assistant',
+    status: 'In Development',
+    gradient: 'from-indigo-400 via-blue-400 to-sky-400',
+    accentColor: 'indigo',
+    technologies: [
+      'OpenAI API',
+      'LLM Integration',
+      'Prompt Engineering',
+      'Function Calling',
+      'Tool Orchestration',
+      'Context Management',
+      'TypeScript',
+      'Node.js',
+      'Weather APIs',
+      'Natural Language Processing',
+      'AI/ML',
+      'Vercel',
+    ],
+  },
 ];
 
 const ProjectSection = () => {
@@ -283,6 +308,12 @@ const ProjectSection = () => {
         bg: 'bg-cyan-50 dark:bg-cyan-900/40',
         border: 'border-cyan-200 dark:border-cyan-700/60',
         hover: 'hover:bg-cyan-100 dark:hover:bg-cyan-800/60',
+      },
+      indigo: {
+        text: 'text-indigo-600 dark:text-indigo-300',
+        bg: 'bg-indigo-50 dark:bg-indigo-900/40',
+        border: 'border-indigo-200 dark:border-indigo-700/60',
+        hover: 'hover:bg-indigo-100 dark:hover:bg-indigo-800/60',
       },
     };
     return colors[color as keyof typeof colors] || colors.blue;
