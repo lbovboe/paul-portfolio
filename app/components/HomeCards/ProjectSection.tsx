@@ -2,7 +2,6 @@ import { useState, useEffect, useRef } from 'react';
 import { Zap, ChevronRight, ChevronLeft, Eye, ArrowUpRight, Sparkles } from 'lucide-react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { SwiperRef } from 'swiper/react';
-import Image from 'next/image';
 import 'swiper/css';
 import { projects } from '../../constants/projectsData';
 
@@ -238,11 +237,10 @@ const ProjectSection = () => {
                       >
                         {/* Image Section */}
                         <div className="relative h-80 overflow-hidden lg:h-96">
-                          <Image
+                          <img
                             src={project.imageUrl}
                             alt={project.title}
-                            fill
-                            className="object-cover transition-transform duration-700 group-hover:scale-105"
+                            className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
                           />
 
                           {/* Overlay */}
