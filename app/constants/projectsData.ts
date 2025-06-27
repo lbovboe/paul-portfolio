@@ -14,6 +14,31 @@ export interface Project {
 // Array of project data with placeholder images
 export const projects: Project[] = [
   {
+    title: 'Agentic Weather Chatbot',
+    description:
+      'An intelligent conversational AI system that leverages advanced language models and sophisticated prompt engineering to provide contextually aware weather information and insights. The chatbot utilizes function calling capabilities to orchestrate multiple weather APIs, tools, and services, delivering personalized responses based on user location, preferences, and historical interaction patterns. Features include multi-turn conversations, real-time weather data integration, predictive analytics for weather trends, natural language processing for complex queries, and adaptive learning from user interactions to improve response accuracy and relevance over time.',
+    projectUrl: 'https://weather-agentic-ai.vercel.app/',
+    imageUrl: 'https://images.unsplash.com/photo-1504608524841-42fe6f032b4b?w=800&h=600&fit=crop&crop=center',
+    category: 'AI Weather Assistant',
+    status: 'Live',
+    gradient: 'from-indigo-400 via-blue-400 to-sky-400',
+    accentColor: 'indigo',
+    technologies: [
+      'OpenAI API',
+      'LLM Integration',
+      'Prompt Engineering',
+      'Function Calling',
+      'Tool Orchestration',
+      'Context Management',
+      'TypeScript',
+      'Node.js',
+      'Weather APIs',
+      'Natural Language Processing',
+      'AI/ML',
+      'Vercel',
+    ],
+  },
+  {
     title: 'Ace Coding Academy',
     description:
       'An interactive educational platform designed to help students master coding skills. Features comprehensive learning paths for multiple programming languages, interactive coding challenges, detailed programming notes, and curated tech news. The platform includes progress tracking, hands-on exercises, and stays up-to-date with the latest developments in technology and programming trends. Perfect for both beginners and intermediate learners looking to enhance their coding expertise.',
@@ -131,31 +156,6 @@ export const projects: Project[] = [
       'Framer Motion',
       'Component Library',
       'Documentation',
-      'Vercel',
-    ],
-  },
-  {
-    title: 'Agentic Weather Chatbot',
-    description:
-      'An intelligent conversational AI system that leverages advanced language models and sophisticated prompt engineering to provide contextually aware weather information and insights. The chatbot utilizes function calling capabilities to orchestrate multiple weather APIs, tools, and services, delivering personalized responses based on user location, preferences, and historical interaction patterns. Features include multi-turn conversations, real-time weather data integration, predictive analytics for weather trends, natural language processing for complex queries, and adaptive learning from user interactions to improve response accuracy and relevance over time.',
-    projectUrl: 'https://weather-chatbot-demo.vercel.app',
-    imageUrl: 'https://images.unsplash.com/photo-1504608524841-42fe6f032b4b?w=800&h=600&fit=crop&crop=center',
-    category: 'AI Weather Assistant',
-    status: 'In Development',
-    gradient: 'from-indigo-400 via-blue-400 to-sky-400',
-    accentColor: 'indigo',
-    technologies: [
-      'OpenAI API',
-      'LLM Integration',
-      'Prompt Engineering',
-      'Function Calling',
-      'Tool Orchestration',
-      'Context Management',
-      'TypeScript',
-      'Node.js',
-      'Weather APIs',
-      'Natural Language Processing',
-      'AI/ML',
       'Vercel',
     ],
   },

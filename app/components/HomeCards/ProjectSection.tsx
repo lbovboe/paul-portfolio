@@ -175,6 +175,35 @@ const ProjectSection = () => {
               return (
                 <SwiperSlide key={`img-${index}`} className="cursor-pointer">
                   <div key={index} className="group relative xl:mx-24">
+                    {/* Navigation Buttons - Positioned at center of whole card with half extending outside */}
+                    {projects.length > 1 && (
+                      <>
+                        {/* Previous Button */}
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handlePrevClick();
+                          }}
+                          className="group/nav absolute left-0 top-1/2 z-20 -translate-x-1/2 -translate-y-1/2 rounded-full border border-blue-200/30 bg-white/90 p-4 shadow-lg backdrop-blur-xl transition-all duration-300 hover:scale-110 hover:bg-white hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-blue-500/50 dark:border-slate-600/30 dark:bg-slate-800/90 dark:hover:bg-slate-800"
+                          aria-label="Previous project"
+                        >
+                          <ChevronLeft className="h-6 w-6 text-slate-600 transition-transform duration-300 group-hover/nav:-translate-x-0.5 dark:text-slate-300" />
+                        </button>
+
+                        {/* Next Button */}
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleNextClick();
+                          }}
+                          className="group/nav absolute right-0 top-1/2 z-20 -translate-y-1/2 translate-x-1/2 rounded-full border border-blue-200/30 bg-white/90 p-4 shadow-lg backdrop-blur-xl transition-all duration-300 hover:scale-110 hover:bg-white hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-blue-500/50 dark:border-slate-600/30 dark:bg-slate-800/90 dark:hover:bg-slate-800"
+                          aria-label="Next project"
+                        >
+                          <ChevronRight className="h-6 w-6 text-slate-600 transition-transform duration-300 group-hover/nav:translate-x-0.5 dark:text-slate-300" />
+                        </button>
+                      </>
+                    )}
+
                     {/* Main Card - CLICKABLE CARD FEATURE
                         The entire card is clickable and redirects to the project URL.
                         Event bubbling allows clicks anywhere on the card to trigger navigation,
@@ -194,35 +223,6 @@ const ProjectSection = () => {
 
                         {/* Overlay */}
                         <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 via-slate-900/20 to-transparent"></div>
-
-                        {/* Navigation Buttons */}
-                        {projects.length > 1 && (
-                          <>
-                            {/* Previous Button */}
-                            <button
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                handlePrevClick();
-                              }}
-                              className="group/nav absolute left-4 top-1/2 -translate-y-1/2 rounded-full border border-white/20 bg-white/10 p-3 backdrop-blur-xl transition-all duration-300 hover:scale-110 hover:bg-white/20 focus:outline-none focus:ring-2 focus:ring-white/50"
-                              aria-label="Previous project"
-                            >
-                              <ChevronLeft className="h-5 w-5 text-white transition-transform duration-300 group-hover/nav:-translate-x-0.5" />
-                            </button>
-
-                            {/* Next Button */}
-                            <button
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                handleNextClick();
-                              }}
-                              className="group/nav absolute right-4 top-1/2 -translate-y-1/2 rounded-full border border-white/20 bg-white/10 p-3 backdrop-blur-xl transition-all duration-300 hover:scale-110 hover:bg-white/20 focus:outline-none focus:ring-2 focus:ring-white/50"
-                              aria-label="Next project"
-                            >
-                              <ChevronRight className="h-5 w-5 text-white transition-transform duration-300 group-hover/nav:translate-x-0.5" />
-                            </button>
-                          </>
-                        )}
 
                         {/* Floating Action Button - CLICKABLE CARD FEATURE
                             Uses stopPropagation() to prevent triggering the card click when clicked.
