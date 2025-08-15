@@ -32,6 +32,36 @@
  * 4. Apply materials and textures
  * 5. Enable user controls for interaction
  * 6. Render everything to the screen
+ *
+ * 🔄 ANIMATION LOOP COMPARISON:
+ * ============================
+ *
+ * 📦 VANILLA THREE.JS (Manual):
+ * ```javascript
+ * function animate() {
+ *   requestAnimationFrame(animate);        // Request next frame
+ *   model.rotation.y += 0.01;             // Update properties
+ *   controls.update();                    // Update controls
+ *   renderer.render(scene, camera);       // Render to screen
+ * }
+ * animate(); // Start the loop manually
+ * ```
+ *
+ * ⚡ REACT THREE FIBER (Automatic):
+ * ```javascript
+ * useFrame((state, delta) => {
+ *   model.rotation.y = state.clock.elapsedTime * 0.5;  // Time-based animation
+ *   // No need to call render() - handled automatically!
+ * });
+ * ```
+ *
+ * 🎯 KEY DIFFERENCES:
+ * - React Three Fiber handles requestAnimationFrame automatically
+ * - No need to manually call renderer.render()
+ * - Controls update automatically
+ * - useFrame provides rich state object with timing info
+ * - Cleaner, more React-like code structure
+ * - Automatic cleanup when component unmounts
  */
 
 import React, { Suspense, useRef } from 'react';
@@ -41,8 +71,14 @@ import * as THREE from 'three';
 
 // GLB Model Component - This loads and displays the 3D model
 function GLBModel() {
+  // 🔗 useRef BRIDGE EXPLANATION:
+  // =============================
+  // useRef creates a "bridge" between JSX and JavaScript animations
+  // Think of it like giving the 3D object a "name" so useFrame can find and animate it
+
   // useRef creates a reference to the 3D model group so we can manipulate it directly
   // THREE.Group is a container that holds multiple 3D objects together
+  // Initially null, gets assigned when the <primitive> element mounts
   const modelRef = useRef<THREE.Group>(null);
 
   // useGLTF is a hook that loads GLB/GLTF 3D model files
@@ -50,24 +86,61 @@ function GLBModel() {
   // The 'scene' contains all the 3D objects, lights, and cameras from the model file
   const { scene } = useGLTF('/lightModel.glb');
 
+  // 🔄 ANIMATION LOOP EXPLANATION:
+  // ===============================
+  // In vanilla Three.js, you'd need to manually create an animation loop like this:
+  //
+  // function animate() {
+  //   requestAnimationFrame(animate);  // 60fps loop
+  //   model.rotation.y += 0.01;        // Update rotation
+  //   renderer.render(scene, camera);  // Render frame
+  // }
+  // animate(); // Start the loop
+  //
+  // 🚀 React Three Fiber's useFrame Hook handles this automatically!
+  // It replaces the manual requestAnimationFrame loop with a clean React hook
+
   // useFrame runs every frame (60fps) and allows us to animate the model
   // 'state' provides access to the Three.js scene state including time and camera info
   useFrame((state) => {
+    // 🔍 THIS CHECK IS CRUCIAL:
+    // modelRef.current will be null until the <primitive> element below actually mounts
+    // Once mounted, modelRef.current contains the actual Three.js Group object
+    // This prevents errors if useFrame runs before the JSX element is ready
     if (modelRef.current) {
       // Rotate the model around the Y-axis (vertical axis) continuously
-      // state.clock.elapsedTime gives us the time since the scene started
+      // state.clock.elapsedTime gives us the time since the scene started (in seconds)
       // Multiplying by 0.5 makes the rotation slower (half speed)
       // rotation.y controls rotation around the vertical axis (left-right rotation)
       modelRef.current.rotation.y = state.clock.elapsedTime * 0.5;
+
+      // 💡 WHAT 'state' CONTAINS:
+      // - state.clock.elapsedTime: Time since scene started (seconds)
+      // - state.clock.getDelta(): Time since last frame (for frame-rate independent animation)
+      // - state.camera: Current camera object
+      // - state.scene: The Three.js scene
+      // - state.gl: WebGL renderer
+      // - state.size: Canvas dimensions
+      // - state.viewport: Viewport dimensions in Three.js units
     }
   });
 
   return (
     // Center component automatically centers the 3D model at the origin (0,0,0)
     <Center>
-      {/* primitive allows us to use any Three.js object directly in React Three Fiber */}
+      {/* 🔗 THE useRef CONNECTION EXPLAINED:
+          ===================================
+          This is where the magic happens! The ref={modelRef} creates the bridge
+          between our JSX and the useFrame animation loop above.
+          
+          HERE'S THE FLOW:
+          1. primitive creates a Three.js object in the scene
+          2. ref={modelRef} attaches our reference to that object
+          3. useFrame can now access modelRef.current to animate it
+          4. React Three Fiber automatically renders the changes
+      */}
       <primitive
-        ref={modelRef} // Reference for direct manipulation
+        ref={modelRef} // 🎯 THIS IS THE KEY! Connects useFrame to this JSX element
         object={scene} // The 3D model scene to render
         scale={[2, 2, 2]} // Makes model 2x larger in all directions [X, Y, Z]
         position={[0, 0, 0]} // Position in 3D space [X, Y, Z] - currently at origin
@@ -152,6 +225,19 @@ const GLBTestComponent: React.FC = () => {
             )}
 
             {/* Three.js Canvas - The main container for all 3D content */}
+            {/* 
+              🔄 ANIMATION LOOP MAGIC HAPPENS HERE!
+              ====================================
+              The Canvas component automatically:
+              1. Creates a requestAnimationFrame loop
+              2. Calls all useFrame hooks every frame (60fps)
+              3. Updates controls (OrbitControls)
+              4. Renders the scene to the screen
+              5. Handles resize events
+              6. Manages WebGL context
+              
+              In vanilla Three.js, you'd need to do all this manually!
+            */}
             <Canvas
               // Camera configuration - defines how we view the 3D scene
               camera={{
