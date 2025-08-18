@@ -1,0 +1,51 @@
+services:
+  # Sensor Backend Server (Port 3001)
+  sensor-backend:
+    image: lbovboe/sensor-3d-model-backend:latest
+    container_name: sensor-backend
+    ports:
+      - "3001:3001"
+    environment:
+      - NODE_ENV=production
+      - PORT=3001
+    networks:
+      - sensor-network
+    restart: unless-stopped
+
+  # Sensor Simulation Site (Port 3000)
+  sensor-simulation:
+    image: lbovboe/sensor-simulator:latest
+    container_name: sensor-simulation
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - NEXT_PUBLIC_BACKEND_URL=http://localhost:3001
+      - EXTERNAL_BACKEND_URL=http://sensor-backend:3001
+    depends_on:
+      - sensor-backend
+    networks:
+      - sensor-network
+    restart: unless-stopped
+
+  # Sensor 3D Model Frontend (Port 3002)
+  sensor-frontend:
+    image: lbovboe/sensor-3d-model-frontend:latest
+    container_name: sensor-frontend
+    ports:
+      - "3002:3002"
+    environment:
+      - NODE_ENV=production
+      - PORT=3002
+      - NEXT_PUBLIC_WEBSOCKET_URL=ws://localhost:3001
+      - INTERNAL_WEBSOCKET_URL=ws://sensor-backend:3001
+    depends_on:
+      - sensor-backend
+    networks:
+      - sensor-network
+    restart: unless-stopped
+
+networks:
+  sensor-network:
+    driver: bridge
+    name: sensor-network
