@@ -90,7 +90,7 @@ export default function DockerDownloadPage() {
         </div>
 
         <div className="border-t pt-6 dark:border-gray-700">
-          <h2 className="mb-2 text-lg font-semibold text-gray-800 dark:text-white">What's included?</h2>
+          <h2 className="mb-2 text-lg font-semibold text-gray-800 dark:text-white">What&apos;s included?</h2>
           <div className="space-y-1 text-sm text-gray-600 dark:text-gray-300">
             <p>• Sensor Backend Server (Port 3001)</p>
             <p>• Sensor Simulation Site (Port 3000)</p>
