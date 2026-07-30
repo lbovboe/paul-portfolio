@@ -39,6 +39,12 @@ const Navbar = (): JSX.Element => {
       // Check if user has scrolled past the top of the page
       const isScrolled = window.scrollY > 0;
       setScrolled(isScrolled);
+
+      // The #home anchor is a zero-height sentinel (the hero now lives in the enter gate),
+      // so it never crosses the observer's mid-viewport band below - highlight "Home" by scroll position instead
+      if (window.scrollY < 100) {
+        setSelected('Home');
+      }
     };
 
     // Add scroll event listener to window

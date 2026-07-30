@@ -38,20 +38,16 @@ const useTypewriter = (texts: string[], typingSpeed = 100, delayBetweenTexts = 1
   return { currentText };
 };
 
-const IntroText = () => {
+interface IntroTextProps {
+  // Called when the user clicks the entry CTA - used to trigger the zoom transition into the home page
+  onEnter: () => void;
+}
+
+const IntroText = ({ onEnter }: IntroTextProps) => {
   // Array of roles to display in the typewriter effect - mobile-optimized shorter versions
   const roles = ['Full Stack Developer', 'React & Next.js Expert', 'TypeScript Enthusiast'];
   // Use typewriter hook with custom timing (slightly faster for mobile)
   const { currentText } = useTypewriter(roles, 50, 1500);
-
-  // Handler for smooth scroll to #contact
-  const handleConnectClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
-    e.preventDefault();
-    const element = document.querySelector('#skills');
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-    }
-  };
 
   return (
     <>
@@ -178,21 +174,19 @@ const IntroText = () => {
 
           {/* Enhanced CTA button - mobile-optimized touch target */}
           <div className="animate-slideInUp animate-delay-1000 opacity-0">
-            <a href="#contact" onClick={handleConnectClick} className="inline-block">
-              <div className="group relative">
-                <div className="gradient-bg absolute -inset-1 rounded-xl opacity-75 blur transition duration-1000 group-hover:opacity-100 group-hover:duration-200 sm:rounded-2xl"></div>
-                <button className="relative flex min-h-[44px] touch-manipulation items-center divide-x divide-gray-600 rounded-lg bg-blue-400 px-4 py-3 leading-none dark:bg-white sm:rounded-xl sm:px-6 sm:py-4 lg:px-8">
-                  <span className="flex items-center space-x-2 sm:space-x-3">
-                    <span className="text-sm font-semibold text-white dark:text-black sm:text-base lg:text-lg">
-                      Let&apos;s Connect
-                    </span>
+            <button type="button" onClick={onEnter} className="group relative">
+              <div className="gradient-bg absolute -inset-1 rounded-xl opacity-75 blur transition duration-1000 group-hover:opacity-100 group-hover:duration-200 sm:rounded-2xl"></div>
+              <div className="relative flex min-h-[44px] touch-manipulation items-center divide-x divide-gray-600 rounded-lg bg-blue-400 px-4 py-3 leading-none dark:bg-white sm:rounded-xl sm:px-6 sm:py-4 lg:px-8">
+                <span className="flex items-center space-x-2 sm:space-x-3">
+                  <span className="text-sm font-semibold text-white dark:text-black sm:text-base lg:text-lg">
+                    Enter
                   </span>
-                  <span className="pl-3 text-sm text-white transition duration-200 group-hover:text-white dark:text-blue-600 dark:group-hover:text-black sm:pl-4 sm:text-base">
-                    →
-                  </span>
-                </button>
+                </span>
+                <span className="pl-3 text-sm text-white transition duration-200 group-hover:text-white dark:text-blue-600 dark:group-hover:text-black sm:pl-4 sm:text-base">
+                  →
+                </span>
               </div>
-            </a>
+            </button>
           </div>
         </div>
       </div>

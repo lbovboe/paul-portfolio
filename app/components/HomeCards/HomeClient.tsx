@@ -1,14 +1,16 @@
 'use client';
 
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, useState } from 'react';
 import { useInView } from 'framer-motion';
-import AnimatedIntroBanner from './AnimatedIntroBanner';
+import EnterGate from './EnterGate';
 import SkillSection from './SkillSection';
 import ProjectSection from './ProjectSection';
 import ContactSection from './ContactSection';
 import ExperienceSection from './ExperienceSection';
 import GLBTestComponent from '../tools/GLBTestComponent';
 const HomeClient = () => {
+  // Gate content is used once and unmounted - the home page starts at Skills once the user enters
+  const [hasEntered, setHasEntered] = useState(false);
   const skillsRef = useRef(null);
   const projectsRef = useRef(null);
   const contactRef = useRef(null);
@@ -30,9 +32,8 @@ const HomeClient = () => {
 
   return (
     <div className="">
-      <div id="home">
-        <AnimatedIntroBanner />
-      </div>
+      {!hasEntered && <EnterGate onEnter={() => setHasEntered(true)} />}
+      <div id="home" />
       <div id="skills" ref={skillsRef}>
         {/* skills section for desktop version */}
         {isSkillsInView && <SkillSection />}
