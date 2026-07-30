@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Code2, Database, Server, Wrench, BookOpen, Star, Sparkles, Zap } from 'lucide-react';
+import { Code2, Database, Server, GitBranch, Cloud, Bot, Star, Sparkles, Zap } from 'lucide-react';
 
 const SkillSection = () => {
   const [activeCategory, setActiveCategory] = useState('Frontend');
@@ -10,178 +10,284 @@ const SkillSection = () => {
     {
       name: 'TypeScript',
       category: 'Language',
-      level: 90,
+      level: 92,
       icon: '🔷',
       description: 'Strongly typed JavaScript for better development experience',
     },
     {
       name: 'JavaScript',
       category: 'Language',
-      level: 99,
+      level: 95,
       icon: '🟨',
       description: 'Core language for web development and modern applications',
     },
     {
       name: 'Python',
       category: 'Language',
-      level: 90,
+      level: 85,
       icon: '🐍',
-      description: 'Versatile language for backend and data processing',
+      description: 'Versatile language for backend, tooling, and AI integrations',
     },
 
     // Frontend
-
     {
-      name: 'React.js',
+      name: 'React',
       category: 'Frontend',
-      level: 96,
+      level: 95,
       icon: '⚛️',
       description: 'Modern library for building interactive user interfaces',
     },
     {
       name: 'Next.js',
       category: 'Frontend',
-      level: 100,
+      level: 95,
       icon: '🔺',
       description: 'Full-stack React framework with server-side rendering',
     },
     {
       name: 'Tailwind CSS',
       category: 'Frontend',
-      level: 100,
-      icon: '🎨',
+      level: 95,
+      icon: '🌊',
       description: 'Utility-first CSS framework for rapid UI development',
     },
     {
-      name: 'Three.js',
+      name: 'HTML5',
       category: 'Frontend',
-      level: 80,
-      icon: '🧊',
-      description: '3D JavaScript library for creating interactive 3D graphics in the browser',
-    },
-    {
-      name: 'WebGL',
-      category: 'Frontend',
-      level: 75,
-      icon: '🌐',
-      description: 'Web Graphics Library for rendering interactive 2D and 3D graphics',
-    },
-    {
-      name: 'HTML',
-      category: 'Frontend',
-      level: 100,
+      level: 95,
       icon: '📄',
       description: 'Markup language for structuring web content',
     },
     {
       name: 'CSS',
       category: 'Frontend',
-      level: 100,
+      level: 92,
       icon: '🎨',
       description: 'Style sheet language for designing web pages',
     },
 
-    // Backend
+    // Backend and APIs
     {
       name: 'Node.js',
       category: 'Backend',
-      level: 90,
+      level: 88,
       icon: '🟢',
       description: 'JavaScript runtime for server-side development',
     },
     {
-      name: 'Express.js',
-      category: 'Backend',
-      level: 82,
-      icon: '🚀',
-      description: 'Fast and minimalist web framework for Node.js',
-    },
-    {
       name: 'REST APIs',
       category: 'Backend',
-      level: 95,
+      level: 90,
       icon: '🔗',
       description: 'RESTful web services and API design principles',
     },
-
-    // Databases
     {
-      name: 'MongoDB',
-      category: 'Database',
-      level: 83,
-      icon: '🍃',
-      description: 'NoSQL database for modern applications',
+      name: 'API Integration',
+      category: 'Backend',
+      level: 90,
+      icon: '🔌',
+      description: 'Integrating third-party and internal APIs into product features',
+    },
+
+    // AI and Agentic AI
+    {
+      name: 'LLM Integration',
+      category: 'AI',
+      level: 88,
+      icon: '🧠',
+      description: 'Integrating large language models into product workflows',
     },
     {
-      name: 'Redis',
-      category: 'Database',
+      name: 'Prompt Engineering',
+      category: 'AI',
+      level: 90,
+      icon: '📝',
+      description: 'Designing prompts to reliably steer model behavior',
+    },
+    {
+      name: 'AI Agents',
+      category: 'AI',
+      level: 85,
+      icon: '🤖',
+      description: 'Building autonomous and semi-autonomous agentic systems',
+    },
+    {
+      name: 'Model Context Protocol',
+      category: 'AI',
+      level: 82,
+      icon: '🧩',
+      description: 'Building MCP servers/clients to connect LLMs with tools and data',
+    },
+    {
+      name: 'Function Calling',
+      category: 'AI',
+      level: 85,
+      icon: '⚙️',
+      description: 'Structured tool-calling for LLM-driven workflows',
+    },
+    {
+      name: 'Tool Orchestration',
+      category: 'AI',
+      level: 82,
+      icon: '🛠️',
+      description: 'Coordinating multiple tools and services within agentic workflows',
+    },
+    {
+      name: 'Agentic Workflows',
+      category: 'AI',
+      level: 85,
+      icon: '🔁',
+      description: 'Designing multi-step, tool-using workflows for AI agents',
+    },
+
+    // AWS
+    {
+      name: 'Amazon Bedrock',
+      category: 'Cloud',
+      level: 82,
+      icon: '🪨',
+      description: 'Managed service for building and scaling foundation-model applications',
+    },
+    {
+      name: 'OpenSearch',
+      category: 'Cloud',
       level: 75,
-      icon: '🔴',
-      description: 'In-memory data structure store for caching',
+      icon: '🔍',
+      description: 'Search and analytics engine used for retrieval and observability',
     },
     {
-      name: 'SQL',
-      category: 'Database',
-      level: 80,
-      icon: '🗄️',
-      description: 'Relational database query language for backend development',
+      name: 'EC2',
+      category: 'Cloud',
+      level: 78,
+      icon: '🖥️',
+      description: 'Provisioning and managing virtual compute instances',
+    },
+    {
+      name: 'S3',
+      category: 'Cloud',
+      level: 82,
+      icon: '🗃️',
+      description: 'Scalable object storage for application and data assets',
+    },
+    {
+      name: 'ECR',
+      category: 'Cloud',
+      level: 75,
+      icon: '📦',
+      description: 'Managed container image registry',
+    },
+    {
+      name: 'EKS',
+      category: 'Cloud',
+      level: 72,
+      icon: '☸️',
+      description: 'Managed Kubernetes for deploying containerized workloads',
+    },
+    {
+      name: 'Lambda',
+      category: 'Cloud',
+      level: 78,
+      icon: '⚡',
+      description: 'Serverless compute for event-driven functions',
+    },
+    {
+      name: 'CloudWatch',
+      category: 'Cloud',
+      level: 75,
+      icon: '📈',
+      description: 'Monitoring, logging, and alerting for cloud resources',
     },
 
-    // Tools
+    // DevOps
+    {
+      name: 'Docker',
+      category: 'DevOps',
+      level: 80,
+      icon: '🐳',
+      description: 'Containerization platform for consistent deployments',
+    },
     {
       name: 'Git',
-      category: 'Tool',
+      category: 'DevOps',
       level: 95,
       icon: '🌿',
       description: 'Version control system for tracking changes',
     },
     {
-      name: 'Docker',
-      category: 'Tool',
-      level: 70,
-      icon: '🐳',
-      description: 'Containerization platform for deployment',
-    },
-    {
-      name: 'AWS',
-      category: 'Tool',
-      level: 75,
-      icon: '☁️',
-      description: 'Cloud computing services and infrastructure',
-    },
-    {
-      name: 'Webpack',
-      category: 'Tool',
-      level: 72,
-      icon: '📦',
-      description: 'Module bundler for JavaScript applications',
-    },
-    {
-      name: 'Postman',
-      category: 'Tool',
-      level: 95,
-      icon: '📮',
-      description: 'API testing and development environment',
-    },
-
-    // Practices
-    {
-      name: 'Agile',
-      category: 'Practice',
-      level: 88,
-      icon: '🔄',
-      description: 'Iterative development methodology for software development',
+      name: 'GitLab',
+      category: 'DevOps',
+      level: 82,
+      icon: '🦊',
+      description: 'Source control and CI/CD platform',
     },
     {
       name: 'CI/CD',
-      category: 'Practice',
+      category: 'DevOps',
+      level: 85,
+      icon: '🔄',
+      description: 'Continuous integration and deployment pipelines',
+    },
+    {
+      name: 'SHIP-HATS',
+      category: 'DevOps',
+      level: 75,
+      icon: '🚢',
+      description: "GovTech's software delivery and assessment framework",
+    },
+
+    // Databases and Testing
+    {
+      name: 'PostgreSQL',
+      category: 'Database',
+      level: 85,
+      icon: '🐘',
+      description: 'Relational database for structured application data',
+    },
+    {
+      name: 'MongoDB',
+      category: 'Database',
+      level: 85,
+      icon: '🍃',
+      description: 'NoSQL database for modern applications',
+    },
+    {
+      name: 'MySQL',
+      category: 'Database',
+      level: 80,
+      icon: '🐬',
+      description: 'Relational database for backend data storage',
+    },
+    {
+      name: 'Redis',
+      category: 'Database',
+      level: 78,
+      icon: '🔴',
+      description: 'In-memory data structure store for caching',
+    },
+    {
+      name: 'Prisma',
+      category: 'Database',
+      level: 80,
+      icon: '✨',
+      description: 'Type-safe ORM for querying and managing databases',
+    },
+    {
+      name: 'Jest',
+      category: 'Database',
       level: 82,
-      icon: '⚙️',
-      description: 'Continuous integration and deployment practices',
+      icon: '🧪',
+      description: 'Testing framework for unit and integration tests',
+    },
+    {
+      name: 'Automated Testing',
+      category: 'Database',
+      level: 82,
+      icon: '✅',
+      description: 'Building automated test suites to catch regressions early',
     },
   ];
 
-  const categories = ['Frontend', 'Backend', 'Database', 'Language', 'Tool', 'Practice', 'All'] as const;
+  const categories = ['Frontend', 'Backend', 'AI', 'Cloud', 'DevOps', 'Database', 'Language', 'All'] as const;
   type Category = (typeof categories)[number];
 
   const categoryIcons: Record<Category, React.ElementType> = {
@@ -189,9 +295,10 @@ const SkillSection = () => {
     Language: Code2,
     Frontend: Star,
     Backend: Server,
+    AI: Bot,
+    Cloud: Cloud,
+    DevOps: GitBranch,
     Database: Database,
-    Tool: Wrench,
-    Practice: BookOpen,
   };
 
   const categoryColors: Record<Category, string> = {
@@ -199,9 +306,10 @@ const SkillSection = () => {
     Language: 'from-purple-400 to-pink-400',
     Frontend: 'from-blue-400 to-indigo-400',
     Backend: 'from-green-400 to-teal-400',
+    AI: 'from-fuchsia-400 to-pink-500',
+    Cloud: 'from-sky-400 to-blue-500',
+    DevOps: 'from-yellow-400 to-orange-400',
     Database: 'from-orange-400 to-red-400',
-    Tool: 'from-gray-400 to-blue-400',
-    Practice: 'from-yellow-400 to-orange-400',
   };
 
   const filteredSkills =
@@ -363,16 +471,15 @@ const SkillSection = () => {
           className="mt-16 hidden grid-cols-2 gap-6 md:grid md:grid-cols-4"
         >
           {[
-            { label: 'Languages', count: skills.filter((s) => s.category === 'Language').length, icon: '💻' },
             { label: 'Frontend', count: skills.filter((s) => s.category === 'Frontend').length, icon: '🎨' },
             { label: 'Backend', count: skills.filter((s) => s.category === 'Backend').length, icon: '⚡' },
+            { label: 'AI & Agentic AI', count: skills.filter((s) => s.category === 'AI').length, icon: '🤖' },
             {
-              label: 'Tools',
+              label: 'Cloud & DevOps',
               count:
-                skills.filter((s) => s.category === 'Tool').length +
-                skills.filter((s) => s.category === 'Database').length +
-                skills.filter((s) => s.category === 'Practice').length,
-              icon: '🛠️',
+                skills.filter((s) => s.category === 'Cloud').length +
+                skills.filter((s) => s.category === 'DevOps').length,
+              icon: '☁️',
             },
           ].map((stat, index) => (
             <div

@@ -21,34 +21,52 @@ const ExperienceSection: React.FC = () => {
   const experiences: Experience[] = [
     {
       id: 1,
-      company: 'Greywolf Networks Pte Ltd',
-      position: 'Frontend Developer',
-      duration: 'May 2024 - Present',
+      company: 'GovTech Singapore (Payroll under Virtusa)',
+      position: 'Software Engineer',
+      duration: 'October 2025 - Present',
       location: 'Singapore, Singapore',
       description:
-        'Crafting seamless, high-performance web applications with React, Next.js, and TypeScript. Focused on intuitive UI, responsive design, and delivering exceptional user experiences through collaboration and modern best practices.',
+        'Building proofs of concept for digital-government initiatives and assessing new features for security, integration, and delivery impact, with a focus on practical LLM and agentic AI applications.',
       achievements: [
-        'Developed and launched multiple responsive web applications with React.js/Next.js',
-        'Optimized application performance and ensured cross-browser compatibility',
-        'Collaborated with cross-functional teams to deliver business requirements',
+        'Developed proofs of concept for digital-government initiatives, including SingStat MCP, to validate technical feasibility and solution design',
+        'Assessed new features and recommended implementation approaches based on security, integration, maintainability, and delivery impact',
+        'Conducted AI workshops on practical applications of large language models and agentic workflows',
+        "Supported improvements to SingStat Table Builder and SANDRA AI Chatbot, while exploring Snowflake's managed MCP server service for Trusted Centre",
+        'Partnered with cross-functional teams to deliver secure, efficient, and user-focused solutions',
       ],
-      technologies: ['React.js', 'Next.js', 'TypeScript', 'Tailwind CSS', 'JavaScript', 'HTML5', 'CSS3'],
+      technologies: ['LLM Integration', 'AI Agents', 'Model Context Protocol', 'Amazon Bedrock', 'Python', 'AWS'],
       type: 'full-time',
     },
     {
       id: 2,
-      company: 'The Lab Singapore',
-      position: 'Full-stack Developer',
-      duration: 'Feb 2022 - May 2024',
+      company: 'Greywolf Networks Pte Ltd',
+      position: 'Frontend React Developer',
+      duration: 'May 2024 - October 2025',
       location: 'Singapore, Singapore',
       description:
-        'Engineered and enhanced an education platform, building robust features and ensuring smooth integration between front-end and back-end. Dedicated to scalable solutions and continuous product improvement.',
+        'Crafted seamless, high-performance web applications with React, Next.js, and TypeScript. Focused on intuitive UI, responsive design, and delivering exceptional user experiences through collaboration and modern best practices.',
       achievements: [
-        'Designed and implemented new features for the education system',
-        'Optimized existing functionalities for better performance and scalability',
-        'Ensured seamless integration between front-end and back-end components',
+        'Built responsive React and Next.js interfaces from Figma designs and integrated real-time features',
+        'Integrated backend APIs and delivered search-optimized applications using TypeScript and Tailwind CSS',
+        'Improved user experience based on product analytics and stakeholder feedback',
       ],
-      technologies: ['React.js', 'Node.js', 'TypeScript', 'PostgreSQL', 'Express', 'Tailwind CSS'],
+      technologies: ['React.js', 'Next.js', 'TypeScript', 'Tailwind CSS', 'REST APIs'],
+      type: 'full-time',
+    },
+    {
+      id: 3,
+      company: 'The Lab Education Centre Pte Ltd',
+      position: 'Full Stack Developer',
+      duration: 'February 2022 - May 2024',
+      location: 'Singapore, Singapore',
+      description:
+        'Engineered and enhanced an education platform, building interactive learning tools for students and teachers with robust backend services and full-lifecycle ownership of internal web applications.',
+      achievements: [
+        'Built interactive learning platforms and coding tools for students and teachers',
+        'Developed APIs and backend services using Node.js and MongoDB',
+        'Managed internal web applications across the full development lifecycle',
+      ],
+      technologies: ['React.js', 'Node.js', 'MongoDB', 'JavaScript', 'Express'],
       type: 'full-time',
     },
   ];
@@ -83,11 +101,8 @@ const ExperienceSection: React.FC = () => {
             <span className="text-sm font-medium text-blue-600 dark:text-white">Professional Journey</span>
           </div>
           <h2 className="mb-6 hidden bg-gradient-to-r from-blue-500 via-sky-500 to-cyan-500 bg-clip-text text-6xl font-bold text-transparent dark:from-cyan-200 dark:via-blue-200 dark:to-blue-100 md:block">
-            Experience
+            Working Experience
           </h2>
-          <p className="mx-auto max-w-2xl text-xl leading-relaxed dark:text-slate-200">
-            A timeline of my professional growth, key achievements, and the technologies that have shaped my career
-          </p>
         </div>
 
         {/* Experience Timeline */}

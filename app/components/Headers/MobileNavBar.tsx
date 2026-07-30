@@ -11,10 +11,9 @@ import ThemeToggle from '../tools/ThemeToggle';
  * Each item contains href (anchor link), label (display text), and icon (emoji)
  */
 const navItems = [
-  { href: '#home', label: 'Home', icon: '🏠' },
-  { href: '#skills', label: 'Skills', icon: '💻' },
-  { href: '#projects', label: 'Projects', icon: '🚀' },
   { href: '#experience', label: 'Experience', icon: '💼' },
+  { href: '#projects', label: 'Projects', icon: '🚀' },
+  { href: '#skills', label: 'Skills', icon: '💻' },
   { href: '#contact', label: 'Contact', icon: '📧' },
 ];
 
@@ -56,7 +55,7 @@ const MobileNavBar = () => {
    * Tracks which navigation section is currently active/selected
    * Updated automatically by Intersection Observer or manually by user clicks
    */
-  const [selected, setSelected] = useState('Home');
+  const [selected, setSelected] = useState(navItems[0].label);
 
   /**
    * SCROLL DETECTION STATE
@@ -94,12 +93,6 @@ const MobileNavBar = () => {
     const handleScroll = () => {
       const isScrolled = window.scrollY > 0;
       setScrolled(isScrolled);
-
-      // The #home anchor is a zero-height sentinel (the hero now lives in the enter gate),
-      // so it never crosses the observer's mid-viewport band below - highlight "Home" by scroll position instead
-      if (window.scrollY < 100) {
-        setSelected('Home');
-      }
     };
 
     // Add scroll listener
@@ -314,7 +307,11 @@ const MobileNavBar = () => {
             - Clickable logo that navigates to home section
             - Uses same navigation logic as menu items
           */}
-          <button onClick={() => handleLinkClick({ href: '#home', label: 'Home' })} className="flex items-center">
+          <button
+            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+            className="flex items-center"
+            aria-label="Scroll to top"
+          >
             <div className="h-[32px] w-[32px] overflow-hidden rounded-full bg-white">
               <Image src="/apple-icon.png" alt="Logo" width={32} height={32} />
             </div>
