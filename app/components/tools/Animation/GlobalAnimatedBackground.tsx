@@ -1,6 +1,6 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { motion, useMotionValue, useSpring } from 'framer-motion';
 import { useEffect, useState } from 'react';
 import { useTheme } from '../../../context/ThemeContext';
 import { colorThemes, type SectionTheme } from '../../../constants/colorThemes';
@@ -10,8 +10,10 @@ interface Particle {
   x: number;
   y: number;
   size: number;
-  speedX: number;
-  speedY: number;
+  driftX: number;
+  driftY: number;
+  duration: number;
+  delay: number;
   opacity: number;
   color: string;
 }
@@ -23,17 +25,17 @@ interface Particle {
  * This component is automatically served to desktop and tablet devices (≥768px) only.
  *
  * PERFORMANCE FEATURES:
- * - 30 animated particles with continuous movement
- * - Real-time mouse tracking with interactive glow effects
+ * - 20 particles animated via Framer Motion's own RAF loop (no interval/state ticking)
+ * - Mouse glow driven by motion values (bypasses React re-renders entirely)
  * - Multiple Framer Motion animations using GPU acceleration
  * - Scroll-based section detection and theme switching
  * - Floating geometric shapes with complex transformations
  *
  * MOBILE OPTIMIZATION:
  * This component is NOT rendered on mobile devices (< 768px) to prevent:
- * - CPU overload from particle calculations
+ * - CPU overload from animation calculations
  * - Device heating from GPU-intensive animations
- * - Battery drain from continuous intervals
+ * - Battery drain
  * - UI lag from background processing
  *
  * Instead, mobile devices receive StaticBackground through BackgroundRenderer.
@@ -43,10 +45,17 @@ interface Particle {
  * consistency with the mobile StaticBackground component.
  */
 const GlobalAnimatedBackground = () => {
-  const [particles, setParticles] = useState<Particle[]>([]);
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [currentSection, setCurrentSection] = useState<SectionTheme>('home');
+  const [particles, setParticles] = useState<Particle[]>([]);
   const { theme } = useTheme();
+
+  // Mouse glow position is tracked as a Framer Motion value instead of React state.
+  // Motion values update the DOM directly on every mousemove without going through
+  // React's render cycle, which previously re-rendered this whole tree on every pixel of movement.
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+  const glowX = useSpring(mouseX, { damping: 50, stiffness: 200, mass: 0.5 });
+  const glowY = useSpring(mouseY, { damping: 50, stiffness: 200, mass: 0.5 });
 
   // Detect current section based on scroll position
   useEffect(() => {
@@ -97,64 +106,39 @@ const GlobalAnimatedBackground = () => {
   const currentTheme = colorThemes[currentSection];
   const colors = theme === 'light' ? currentTheme.light : currentTheme.dark;
 
-  // Generate particles based on current theme
+  // Generate particles based on current theme.
+  // Generated client-side only (in an effect, not on render) so the random values used
+  // for SSR markup and the client's first render never diverge and trigger a hydration
+  // mismatch. Positions are in viewport percentages and drift is handled by Framer
+  // Motion's own animate loop (a single RAF driver) instead of a 50ms setInterval that
+  // used to re-render this entire component 20 times a second.
   useEffect(() => {
-    const generateParticles = () => {
-      const newParticles: Particle[] = [];
-
-      for (let i = 0; i < 30; i++) {
-        newParticles.push({
-          id: i,
-          x: Math.random() * window.innerWidth,
-          y: Math.random() * window.innerHeight,
-          size: Math.random() * 4 + 2,
-          speedX: (Math.random() - 0.5) * 0.5,
-          speedY: (Math.random() - 0.5) * 0.5,
-          opacity: theme === 'light' ? Math.random() * 0.4 + 0.2 : Math.random() * 0.5 + 0.3,
-          color: colors.particles[Math.floor(Math.random() * colors.particles.length)],
-        });
-      }
-      setParticles(newParticles);
-    };
-
-    generateParticles();
+    setParticles(
+      Array.from({ length: 20 }, (_, i) => ({
+        id: i,
+        x: Math.random() * 100,
+        y: Math.random() * 100,
+        size: Math.random() * 4 + 2,
+        driftX: (Math.random() - 0.5) * 80,
+        driftY: (Math.random() - 0.5) * 80,
+        duration: Math.random() * 10 + 10,
+        delay: Math.random() * 4,
+        opacity: theme === 'light' ? Math.random() * 0.4 + 0.2 : Math.random() * 0.5 + 0.3,
+        color: colors.particles[Math.floor(Math.random() * colors.particles.length)],
+      }))
+    );
   }, [theme, currentSection, colors.particles]);
 
-  // Mouse tracking
+  // Mouse tracking - feeds motion values directly, no React state/re-render involved
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
-      setMousePosition({ x: e.clientX, y: e.clientY });
+      mouseX.set(e.clientX - 192);
+      mouseY.set(e.clientY - 192);
     };
 
-    window.addEventListener('mousemove', handleMouseMove);
+    window.addEventListener('mousemove', handleMouseMove, { passive: true });
     return () => window.removeEventListener('mousemove', handleMouseMove);
-  }, []);
-
-  // Particle animation
-  useEffect(() => {
-    const animateParticles = () => {
-      setParticles((prev) =>
-        prev.map((particle) => {
-          let newX = particle.x + particle.speedX;
-          let newY = particle.y + particle.speedY;
-
-          if (newX > window.innerWidth) newX = 0;
-          if (newX < 0) newX = window.innerWidth;
-          if (newY > window.innerHeight) newY = 0;
-          if (newY < 0) newY = window.innerHeight;
-
-          return {
-            ...particle,
-            x: newX,
-            y: newY,
-          };
-        })
-      );
-    };
-
-    const interval = setInterval(animateParticles, 50);
-    return () => clearInterval(interval);
-  }, []);
+  }, [mouseX, mouseY]);
 
   return (
     <div className="fixed inset-0 -z-10 overflow-hidden">
@@ -236,8 +220,8 @@ const GlobalAnimatedBackground = () => {
             key={particle.id}
             className="absolute rounded-full"
             style={{
-              left: particle.x,
-              top: particle.y,
+              left: `${particle.x}%`,
+              top: `${particle.y}%`,
               width: particle.size,
               height: particle.size,
               backgroundColor: particle.color,
@@ -246,31 +230,24 @@ const GlobalAnimatedBackground = () => {
               boxShadow: `0 0 ${particle.size * 2}px ${particle.color}`,
             }}
             animate={{
+              x: [0, particle.driftX, 0],
+              y: [0, particle.driftY, 0],
               scale: [1, 1.5, 1],
             }}
             transition={{
-              duration: Math.random() * 3 + 2,
+              duration: particle.duration,
               repeat: Infinity,
               ease: 'easeInOut',
-              delay: Math.random() * 2,
+              delay: particle.delay,
             }}
           />
         ))}
       </div>
 
-      {/* Interactive mouse glow */}
+      {/* Interactive mouse glow - driven by spring-smoothed motion values, not React state */}
       <motion.div
         className={`pointer-events-none absolute h-96 w-96 rounded-full bg-gradient-to-r blur-3xl ${colors.accent1} opacity-30`}
-        animate={{
-          x: mousePosition.x - 192,
-          y: mousePosition.y - 192,
-        }}
-        transition={{
-          type: 'spring',
-          damping: 50,
-          stiffness: 200,
-          mass: 0.5,
-        }}
+        style={{ x: glowX, y: glowY }}
       />
 
       {/* Final vignette overlay */}

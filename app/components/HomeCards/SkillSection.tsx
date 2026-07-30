@@ -335,9 +335,9 @@ const SkillSection = () => {
                       </div>
                       <div className="h-2 w-full overflow-hidden rounded-full bg-blue-100/60 dark:bg-slate-800/60">
                         <motion.div
-                          className={`h-2 bg-gradient-to-r ${categoryColors[skill.category as Category]} rounded-full dark:from-cyan-700 dark:to-blue-700`}
-                          initial={{ width: 0 }}
-                          animate={{ width: `${skill.level}%` }}
+                          className={`h-2 w-full origin-left bg-gradient-to-r ${categoryColors[skill.category as Category]} rounded-full dark:from-cyan-700 dark:to-blue-700`}
+                          initial={{ scaleX: 0 }}
+                          animate={{ scaleX: skill.level / 100 }}
                           transition={{ duration: 1, delay: index * 0.1 }}
                         />
                       </div>
