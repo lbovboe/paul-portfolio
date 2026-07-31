@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { createPortal } from 'react-dom';
 import AnimatedIntroBanner from './AnimatedIntroBanner';
 
 interface EnterGateProps {
@@ -12,28 +11,24 @@ interface EnterGateProps {
 // Full-screen splash shown before the home page. Clicking "Enter" zooms the
 // banner toward the viewer and fades it out, revealing the home page underneath.
 //
-// Rendered via a portal directly into <body>: `main` in the root layout has its own
-// `position: relative; z-index: 10`, which creates a stacking context. Any z-index inside
-// it - no matter how high - is capped at that level, so it can never paint above the nav
-// bar's z-50 (which lives outside `main`, in the Header). Portaling escapes that context.
+// Rendered inline (not portaled) so it's part of the initial server-rendered HTML and
+// covers the nav bar from the very first paint - no client-only mount step, no flash of
+// the nav/footer before it appears. Its z-index only needs to beat the nav bar's z-50,
+// which works because `main` in the root layout no longer creates its own stacking context.
 const EnterGate = ({ onEnter }: EnterGateProps) => {
   const [isExiting, setIsExiting] = useState(false);
-  const [mounted, setMounted] = useState(false);
 
   // Lock page scroll while the gate is up so the home page can't be scrolled behind it
   useEffect(() => {
-    setMounted(true);
     document.body.style.overflow = 'hidden';
     return () => {
       document.body.style.overflow = 'unset';
     };
   }, []);
 
-  if (!mounted) return null;
-
-  return createPortal(
+  return (
     <div
-      className={`fixed inset-0 z-[200] transform-gpu bg-white transition-all duration-700 ease-in-out dark:bg-slate-950 ${
+      className={`fixed inset-0 z-[60] transform-gpu bg-white transition-all duration-700 ease-in-out dark:bg-slate-950 ${
         isExiting ? 'pointer-events-none scale-150 opacity-0' : 'scale-100 opacity-100'
       }`}
       onTransitionEnd={(e) => {
@@ -44,8 +39,7 @@ const EnterGate = ({ onEnter }: EnterGateProps) => {
       }}
     >
       <AnimatedIntroBanner onEnter={() => setIsExiting(true)} />
-    </div>,
-    document.body
+    </div>
   );
 };
 

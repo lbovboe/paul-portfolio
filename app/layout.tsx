@@ -19,7 +19,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <ThemeProvider>
           <BackgroundRenderer />
           <Header />
-          <main className="relative z-10 flex-grow">{children}</main>
+          <main className="flex-grow">{children}</main>
           <Footer />
         </ThemeProvider>
       </body>
