@@ -15,6 +15,7 @@ const navItems = [
   { href: '#projects', label: 'Projects', icon: '🚀' },
   { href: '#skills', label: 'Skills', icon: '💻' },
   { href: '#contact', label: 'Contact', icon: '📧' },
+  { href: '#others', label: 'Others', icon: '🧩' },
 ];
 
 /**

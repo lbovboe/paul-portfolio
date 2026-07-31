@@ -344,8 +344,8 @@ const SkillSection = () => {
   };
 
   return (
-    <section className="relative overflow-hidden px-4 py-12 md:py-20">
-      <div className="container relative z-10 mx-auto">
+    <section className="relative overflow-hidden px-4 py-20">
+      <div className="relative z-10 mx-auto max-w-6xl">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: -50 }}
