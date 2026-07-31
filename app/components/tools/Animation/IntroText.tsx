@@ -45,7 +45,7 @@ interface IntroTextProps {
 
 const IntroText = ({ onEnter }: IntroTextProps) => {
   // Array of roles to display in the typewriter effect - mobile-optimized shorter versions
-  const roles = ['Full Stack Developer', 'React & Next.js Expert', 'TypeScript Enthusiast'];
+  const roles = ['Software Engineer', 'AI & Agentic Workflows', 'React & Next.js Developer'];
   // Use typewriter hook with custom timing (slightly faster for mobile)
   const { currentText } = useTypewriter(roles, 50, 1500);
 
@@ -153,8 +153,8 @@ const IntroText = ({ onEnter }: IntroTextProps) => {
           </div>
 
           {/* Dramatic name typography - highly responsive */}
-          <h1 className="animate-slideInUp animate-delay-400 mb-4 text-3xl font-black tracking-tight opacity-0 sm:mb-6 sm:text-4xl md:text-6xl lg:text-7xl xl:text-8xl 2xl:text-9xl">
-            <span className="text-gradient">Paul</span>
+          <h1 className="animate-slideInUp animate-delay-400 mb-4 text-2xl font-black tracking-tight opacity-0 sm:mb-6 sm:text-3xl md:text-5xl lg:text-6xl xl:text-7xl 2xl:text-8xl">
+            <span className="text-gradient">Jianbo (Paul)</span>
           </h1>
 
           {/* Role with typewriter effect - responsive spacing and sizing */}
@@ -169,7 +169,8 @@ const IntroText = ({ onEnter }: IntroTextProps) => {
 
           {/* Streamlined description - responsive and readable on mobile */}
           <p className="animate-fadeIn animate-delay-800 mx-auto mb-4 max-w-sm text-sm leading-relaxed text-gray-600 opacity-0 dark:text-gray-300 sm:mb-6 sm:max-w-xl sm:text-lg lg:mb-8 lg:max-w-2xl lg:text-xl">
-            Crafting seamless digital experiences with cutting-edge technologies and innovative solutions.
+            Software Engineer with 4+ years building scalable web applications and AI-enabled solutions, from React
+            and Next.js products to LLM-powered agentic workflows.
           </p>
 
           {/* Enhanced CTA button - mobile-optimized touch target */}

@@ -4,7 +4,7 @@ import { ArrowLeft } from 'lucide-react';
 import GLBTestComponent from '@/app/components/tools/GLBTestComponent';
 
 export const metadata: Metadata = {
-  title: '3D Playground | Paul',
+  title: '3D Playground | Jianbo (Paul)',
   description: 'Interactive 3D model playground built with Three.js and React Three Fiber',
 };
 

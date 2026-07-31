@@ -29,7 +29,7 @@ const Footer = () => {
             - text-light/dark-text-secondary: Theme-based text color
           */}
           <div className="gradient-text">
-            Copyright © {new Date().getFullYear()} Paul&apos;s Portfolio. All rights reserved.
+            Copyright © {new Date().getFullYear()} Jianbo (Paul). All rights reserved.
           </div>
 
           {/* 

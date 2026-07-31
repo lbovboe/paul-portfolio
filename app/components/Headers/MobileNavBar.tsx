@@ -544,7 +544,7 @@ const MobileNavBar = () => {
         */}
         <div className="absolute bottom-0 left-0 right-0 p-6 text-center">
           <p className={`text-xs ${theme === 'light' ? 'text-blue-500/70' : 'text-blue-300/70'}`}>
-            © 2024 Paul Portfolio
+            © {new Date().getFullYear()} Jianbo (Paul) Portfolio
           </p>
         </div>
       </div>

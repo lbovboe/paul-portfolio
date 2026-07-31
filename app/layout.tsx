@@ -7,8 +7,8 @@ import Footer from '@/app/components/Footer/Footer';
 import Header from '@/app/components/Headers/Header';
 // Define metadata for the application
 export const metadata: Metadata = {
-  title: 'Paul | Portfolio',
-  description: 'Portfolio of Paul',
+  title: 'Jianbo (Paul) | Portfolio',
+  description: 'Portfolio of Jianbo (Paul)',
 };
 
 // Root layout component that wraps all pages
