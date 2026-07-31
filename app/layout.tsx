@@ -4,7 +4,7 @@ import BackgroundRenderer from './components/tools/Animation/BackgroundRenderer'
 import './globals.css';
 import './reset.css';
 import Footer from '@/app/components/Footer/Footer';
-import Header from '@/app/components/Headers/Header';
+import ConditionalHeader from '@/app/components/Headers/ConditionalHeader';
 // Define metadata for the application
 export const metadata: Metadata = {
   title: 'Jianbo (Paul) | Portfolio',
@@ -18,7 +18,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className="flex min-h-screen flex-col">
         <ThemeProvider>
           <BackgroundRenderer />
-          <Header />
+          <ConditionalHeader />
           <main className="flex-grow">{children}</main>
           <Footer />
         </ThemeProvider>
