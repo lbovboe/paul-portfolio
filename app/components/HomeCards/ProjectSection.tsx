@@ -65,15 +65,12 @@ const ProjectSection = () => {
       <div className="relative z-10 mx-auto max-w-6xl">
         {/* Header */}
         <div className="mb-16 text-center">
-          <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-blue-200/60 bg-white/70 px-4 py-2 shadow-lg backdrop-blur-xl dark:border-blue-700/60 dark:bg-slate-800/80">
-            <Sparkles className="h-4 w-4 text-blue-500 dark:text-cyan-300" />
-            <span className="text-sm font-medium text-blue-700 dark:text-slate-200">Featured Projects</span>
-            <div className="h-2 w-2 rounded-full bg-blue-400 dark:bg-cyan-400"></div>
+          <div className="inline-flex items-center gap-3 rounded-full border border-blue-200/60 bg-white/70 px-6 py-3 shadow-lg backdrop-blur-xl dark:border-blue-700/60 dark:bg-slate-800/80 md:px-8 md:py-4">
+            <Sparkles className="h-5 w-5 flex-shrink-0 text-blue-500 dark:text-cyan-300 md:h-7 md:w-7" />
+            <h2 className="bg-gradient-to-r from-blue-500 via-sky-500 to-cyan-500 bg-clip-text text-xl font-bold text-transparent dark:from-cyan-200 dark:via-blue-200 dark:to-blue-100 md:text-4xl">
+              Personal Projects
+            </h2>
           </div>
-
-          <h2 className="mb-6 hidden bg-gradient-to-r from-blue-500 via-sky-500 to-cyan-500 bg-clip-text text-6xl font-bold text-transparent dark:from-cyan-200 dark:via-blue-200 dark:to-blue-100 md:block">
-            Personal Projects
-          </h2>
         </div>
 
         {/* Project Grid - equal-height cards, aligned to the same width as the Experience section */}

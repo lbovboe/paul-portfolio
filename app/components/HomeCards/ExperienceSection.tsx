@@ -89,13 +89,12 @@ const ExperienceSection: React.FC = () => {
       <div className="relative z-10 mx-auto max-w-6xl">
         {/* Header */}
         <div className="mb-16 text-center">
-          <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-blue-200/30 bg-blue-500/10 px-4 py-2 backdrop-blur-sm">
-            <Briefcase className="h-4 w-4 text-blue-600" />
-            <span className="text-sm font-medium text-blue-600 dark:text-white">Professional Journey</span>
+          <div className="inline-flex items-center gap-3 rounded-full border border-blue-200/30 bg-blue-500/10 px-6 py-3 backdrop-blur-sm md:px-8 md:py-4">
+            <Briefcase className="h-5 w-5 flex-shrink-0 text-blue-600 dark:text-cyan-400 md:h-7 md:w-7" />
+            <h2 className="bg-gradient-to-r from-blue-500 via-sky-500 to-cyan-500 bg-clip-text text-xl font-bold text-transparent dark:from-cyan-200 dark:via-blue-200 dark:to-blue-100 md:text-4xl">
+              Working Experience
+            </h2>
           </div>
-          <h2 className="mb-6 hidden bg-gradient-to-r from-blue-500 via-sky-500 to-cyan-500 bg-clip-text text-6xl font-bold text-transparent dark:from-cyan-200 dark:via-blue-200 dark:to-blue-100 md:block">
-            Working Experience
-          </h2>
         </div>
 
         {/* Experience Timeline */}
