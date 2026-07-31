@@ -1,128 +1,18 @@
-import { useState, useEffect, useRef } from 'react';
-import { Zap, ChevronRight, ChevronLeft, Eye, ArrowUpRight, Sparkles } from 'lucide-react';
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { SwiperRef } from 'swiper/react';
-import 'swiper/css';
+import { motion } from 'framer-motion';
+import { Zap, Eye, ArrowUpRight, Sparkles } from 'lucide-react';
 import { projects } from '../../constants/projectsData';
 
 const ProjectSection = () => {
-  // Swiper section
-  const swiperRef = useRef<SwiperRef>(null);
-
-  useEffect(() => {
-    const swiperInstance = swiperRef?.current?.swiper;
-    if (swiperInstance) {
-      swiperInstance.on('slideChange', handleSlideChange);
-    }
-
-    return () => {
-      if (swiperInstance) {
-        swiperInstance.off('slideChange', handleSlideChange);
-      }
-    };
-  }, []);
-
-  const handleNextClick = () => {
-    const swiperInstance = swiperRef?.current?.swiper;
-    if (swiperInstance) {
-      const currentIndex = swiperInstance.activeIndex;
-      const slidesCount = swiperInstance.slides.length;
-      if (currentIndex === slidesCount - 1) {
-        swiperInstance.slideToLoop(0);
-      } else {
-        swiperInstance.slideNext();
-      }
-    }
-  };
-
-  const handlePrevClick = () => {
-    const swiperInstance = swiperRef?.current?.swiper;
-    if (swiperInstance) {
-      const currentIndex = swiperInstance.activeIndex;
-      const slidesCount = swiperInstance.slides.length;
-      if (currentIndex === 0) {
-        swiperInstance.slideToLoop(slidesCount - 1);
-      } else {
-        swiperInstance.slidePrev();
-      }
-    }
-  };
-
-  const handleSlideChange = () => {
-    const swiperInstance = swiperRef?.current?.swiper;
-    if (swiperInstance) {
-      // Hide swipe hint after user swipes
-      setShowSwipeHint(false);
-    }
-  };
-
-  // End of swiper section
-  const [expandedCards, setExpandedCards] = useState<number[]>([]);
-  const [isTruncated, setIsTruncated] = useState<boolean[]>([]);
-  const [showSwipeHint, setShowSwipeHint] = useState(true);
-  const descriptionRefs = useRef<(HTMLParagraphElement | null)[]>([]);
-
-  const toggleCard = (index: number) => {
-    setExpandedCards((prev) => (prev.includes(index) ? prev.filter((i) => i !== index) : [...prev, index]));
-  };
-
   /**
    * CLICKABLE CARD FEATURE
    * Handles clicking on the entire project card to redirect to the project URL.
    * Opens the link in a new tab to preserve user's current browsing session.
-   * This function is called when user clicks anywhere on the card EXCEPT:
-   * - The "Read more" button (uses stopPropagation to prevent card click)
-   * - The floating action button (uses stopPropagation to prevent double navigation)
-   * - The navigation buttons (uses stopPropagation to prevent card click)
+   * This function is called when user clicks anywhere on the card EXCEPT
+   * the floating action button, which uses stopPropagation to prevent double navigation.
    */
   const handleCardClick = (projectUrl: string) => {
     window.open(projectUrl, '_blank', 'noopener,noreferrer');
   };
-
-  /**
-   * CONDITIONAL READ MORE FEATURE
-   * Detects if text descriptions actually exceed 3 lines and need a "Read more" button.
-   * How it works:
-   * 1. Compares scrollHeight (total content height) with clientHeight (visible height)
-   * 2. When line-clamp-3 is applied and content exceeds 3 lines, scrollHeight > clientHeight
-   * 3. Only shows "Read more" button for descriptions that are actually truncated
-   * 4. Prevents unnecessary buttons for short descriptions that fit in 3 lines
-   */
-  const checkTruncation = () => {
-    const truncatedStates = descriptionRefs.current.map((ref) => {
-      if (!ref) return false;
-      return ref.scrollHeight > ref.clientHeight;
-    });
-    setIsTruncated(truncatedStates);
-  };
-
-  useEffect(() => {
-    // Check truncation after content loads
-    const timer = setTimeout(checkTruncation, 100);
-
-    // Check on window resize
-    const handleResize = () => {
-      setTimeout(checkTruncation, 100);
-    };
-
-    window.addEventListener('resize', handleResize);
-
-    return () => {
-      clearTimeout(timer);
-      window.removeEventListener('resize', handleResize);
-    };
-  }, []);
-
-  // Auto-hide swipe hint after 5 seconds (longer to ensure users see it)
-  useEffect(() => {
-    if (showSwipeHint && projects.length > 1) {
-      const timer = setTimeout(() => {
-        setShowSwipeHint(false);
-      }, 5000);
-
-      return () => clearTimeout(timer);
-    }
-  }, [showSwipeHint]);
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -157,197 +47,155 @@ const ProjectSection = () => {
         border: 'border-indigo-200 dark:border-indigo-700/60',
         hover: 'hover:bg-indigo-100 dark:hover:bg-indigo-800/60',
       },
+      purple: {
+        text: 'text-purple-600 dark:text-purple-300',
+        bg: 'bg-purple-50 dark:bg-purple-900/40',
+        border: 'border-purple-200 dark:border-purple-700/60',
+        hover: 'hover:bg-purple-100 dark:hover:bg-purple-800/60',
+      },
     };
     return colors[color as keyof typeof colors] || colors.blue;
   };
 
+  // Cap visible tech tags so every card's tag row takes the same amount of space
+  const MAX_VISIBLE_TECHS = 5;
+
   return (
-    <section className="relative min-h-screen overflow-hidden">
-      <div className="container relative z-10 mx-auto px-4 py-12 md:py-20">
+    <section className="relative min-h-screen overflow-hidden px-4 py-20">
+      <div className="relative z-10 mx-auto max-w-6xl">
         {/* Header */}
-        <div className="animate-fade-in text-center md:mb-10">
-          <div className="mb-8 inline-flex items-center gap-3 rounded-full border border-blue-200/60 bg-white/70 px-6 py-3 shadow-lg backdrop-blur-xl dark:border-blue-700/60 dark:bg-slate-800/80">
-            <Sparkles className="h-5 w-5 text-blue-500 dark:text-cyan-300" />
+        <div className="mb-16 text-center">
+          <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-blue-200/60 bg-white/70 px-4 py-2 shadow-lg backdrop-blur-xl dark:border-blue-700/60 dark:bg-slate-800/80">
+            <Sparkles className="h-4 w-4 text-blue-500 dark:text-cyan-300" />
             <span className="text-sm font-medium text-blue-700 dark:text-slate-200">Featured Projects</span>
             <div className="h-2 w-2 rounded-full bg-blue-400 dark:bg-cyan-400"></div>
           </div>
 
-          <h2 className="hidden bg-gradient-to-r from-blue-500 via-sky-500 to-cyan-500 bg-clip-text text-6xl font-bold text-transparent dark:from-cyan-200 dark:via-blue-200 dark:to-blue-100 md:block">
-            Personal Masterpieces
+          <h2 className="mb-6 hidden bg-gradient-to-r from-blue-500 via-sky-500 to-cyan-500 bg-clip-text text-6xl font-bold text-transparent dark:from-cyan-200 dark:via-blue-200 dark:to-blue-100 md:block">
+            Personal Projects
           </h2>
-
-          {/* Swipe Instructions - Only show when there are multiple projects */}
-          {projects.length > 1 && (
-            <div className="animate-fade-in mx-auto mb-4 max-w-md md:hidden">
-              <div className="flex items-center justify-center gap-3 rounded-full border border-blue-200/60 bg-white/70 px-6 py-3 shadow-lg backdrop-blur-xl dark:border-blue-700/60 dark:bg-slate-800/80">
-                <span className="text-center text-sm font-medium text-slate-600 dark:text-slate-300">
-                  Swipe to explore more projects
-                </span>
-              </div>
-            </div>
-          )}
         </div>
-        {/* Navigation Buttons - Hidden on mobile, visible on desktop */}
-        {projects.length > 1 && (
-          <>
-            {/* Previous Button */}
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                handlePrevClick();
-              }}
-              className="group/nav absolute left-0 top-1/2 z-20 hidden -translate-x-1/2 rounded-full border border-blue-200/30 bg-white/90 p-4 shadow-lg backdrop-blur-xl transition-all duration-300 hover:scale-110 hover:bg-white hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-blue-500/50 dark:border-slate-600/30 dark:bg-slate-800/90 dark:hover:bg-slate-800 md:block"
-              aria-label="Previous project"
-            >
-              <ChevronLeft className="h-6 w-6 text-slate-600 transition-transform duration-300 group-hover/nav:-translate-x-0.5 dark:text-slate-300" />
-            </button>
 
-            {/* Next Button */}
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                handleNextClick();
-              }}
-              className="group/nav absolute right-0 top-1/2 z-20 hidden translate-x-1/2 rounded-full border border-blue-200/30 bg-white/90 p-4 shadow-lg backdrop-blur-xl transition-all duration-300 hover:scale-110 hover:bg-white hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-blue-500/50 dark:border-slate-600/30 dark:bg-slate-800/90 dark:hover:bg-slate-800 md:block"
-              aria-label="Next project"
-            >
-              <ChevronRight className="h-6 w-6 text-slate-600 transition-transform duration-300 group-hover/nav:translate-x-0.5 dark:text-slate-300" />
-            </button>
-          </>
-        )}
+        {/* Project Grid - equal-height cards, aligned to the same width as the Experience section */}
+        <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
+          {projects.map((project, index) => {
+            const accentColors = getAccentColors(project.accentColor);
+            const visibleTechs = project.technologies?.slice(0, MAX_VISIBLE_TECHS) ?? [];
+            const extraTechCount = (project.technologies?.length ?? 0) - visibleTechs.length;
 
-        <div className="relative">
-          <Swiper spaceBetween={0} slidesPerView={1} ref={swiperRef} loop={true} onSlideChange={handleSlideChange}>
-            {projects !== undefined &&
-              projects !== null &&
-              projects.length > 0 &&
-              projects.map((project, index) => {
-                const accentColors = getAccentColors(project.accentColor);
-                return (
-                  <SwiperSlide key={`img-${index}`} className="cursor-pointer">
-                    <div key={index} className="group relative xl:mx-24">
-                      {/* Main Card - CLICKABLE CARD FEATURE
-                          The entire card is clickable and redirects to the project URL.
-                          Event bubbling allows clicks anywhere on the card to trigger navigation,
-                          except for elements that use stopPropagation() to prevent it.
-                      */}
-                      <div
-                        className="relative flex h-full cursor-pointer flex-col overflow-hidden rounded-2xl border border-blue-200/50 bg-white/80 backdrop-blur-xl transition-all duration-500 group-hover:-translate-y-2 group-hover:border-blue-300/60 group-hover:bg-white/90 dark:border-slate-700/50 dark:bg-slate-900/80 dark:group-hover:border-cyan-400/60 dark:group-hover:bg-slate-900/90"
-                        onClick={() => handleCardClick(project.projectUrl)}
+            return (
+              <motion.div
+                key={project.title}
+                className="group relative"
+                initial={{ opacity: 0, y: 40 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: '-80px' }}
+                transition={{ duration: 0.6, delay: (index % 2) * 0.15, ease: 'easeOut' }}
+              >
+                {/* Main Card - CLICKABLE CARD FEATURE
+                    The entire card is clickable and redirects to the project URL.
+                    Event bubbling allows clicks anywhere on the card to trigger navigation,
+                    except for the floating action button, which uses stopPropagation.
+                */}
+                <div
+                  className="relative flex h-full cursor-pointer flex-col overflow-hidden rounded-2xl border border-blue-200/50 bg-white/80 backdrop-blur-xl transition-all duration-500 hover:-translate-y-2 hover:border-blue-300/60 hover:bg-white/90 hover:shadow-2xl hover:shadow-blue-500/20 dark:border-slate-700/50 dark:bg-slate-900/80 dark:hover:border-cyan-400/60 dark:hover:bg-slate-900/90 dark:hover:shadow-cyan-500/20"
+                  onClick={() => handleCardClick(project.projectUrl)}
+                >
+                  {/* Image Section - fixed aspect ratio so every card matches */}
+                  <div className="relative aspect-[16/10] overflow-hidden">
+                    <img
+                      src={project.imageUrl}
+                      alt={project.title}
+                      className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
+                    />
+
+                    {/* Overlay - darkens further on hover to host the reveal CTA */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-slate-900/70 via-slate-900/20 to-transparent transition-colors duration-500 group-hover:from-slate-900/80" />
+
+                    {/* Hover reveal CTA - the interactive "catch attention" moment */}
+                    <div className="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                      <span className="translate-y-2 rounded-full border border-white/30 bg-white/10 px-5 py-2.5 text-sm font-semibold text-white shadow-lg backdrop-blur-md transition-transform duration-300 group-hover:translate-y-0">
+                        View Project →
+                      </span>
+                    </div>
+
+                    {/* Floating Action Button - CLICKABLE CARD FEATURE
+                      Uses stopPropagation() to prevent triggering the card click when clicked.
+                      This ensures users can click the button without also triggering card navigation.
+                    */}
+                    <a
+                      href={project.projectUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={(e) => e.stopPropagation()}
+                      className={`absolute right-4 top-4 rounded-full border ${accentColors.border} ${accentColors.bg} p-2.5 shadow-lg backdrop-blur-xl transition-all duration-300 ${accentColors.hover} group/btn hover:scale-110`}
+                    >
+                      <ArrowUpRight
+                        className={`h-4 w-4 ${accentColors.text} transition-transform duration-300 group-hover/btn:rotate-12`}
+                      />
+                    </a>
+
+                    {/* Status Badge */}
+                    <div className="absolute bottom-4 left-4">
+                      <span
+                        className={`rounded-full border px-3 py-1.5 text-xs font-medium shadow-lg backdrop-blur-xl ${getStatusColor(project.status)}`}
                       >
-                        {/* Image Section */}
-                        <div className="relative h-80 overflow-hidden lg:h-96">
-                          <img
-                            src={project.imageUrl}
-                            alt={project.title}
-                            className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
-                          />
+                        <div className="mr-1.5 inline-block h-1.5 w-1.5 rounded-full bg-current"></div>
+                        {project.status}
+                      </span>
+                    </div>
+                  </div>
 
-                          {/* Overlay */}
-                          <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 via-slate-900/20 to-transparent"></div>
+                  {/* Content Section */}
+                  <div className="flex flex-1 flex-col p-6 lg:p-8">
+                    {/* Header */}
+                    <div className="mb-4">
+                      <div className="mb-2 flex items-center justify-between gap-3">
+                        <h3 className="text-xl font-bold text-slate-800 dark:text-cyan-200 lg:text-2xl">
+                          {project.title}
+                        </h3>
+                        <Eye
+                          className={`h-5 w-5 flex-shrink-0 ${accentColors.text} opacity-0 transition-all duration-300 group-hover:opacity-100`}
+                        />
+                      </div>
+                      <p className={`text-sm font-medium ${accentColors.text}`}>{project.category}</p>
+                    </div>
 
-                          {/* Floating Action Button - CLICKABLE CARD FEATURE
-                            Uses stopPropagation() to prevent triggering the card click when clicked.
-                            This ensures users can click the button without also triggering card navigation.
-                        */}
-                          <a
-                            href={project.projectUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            onClick={(e) => e.stopPropagation()}
-                            className={`absolute right-6 top-6 rounded-full border ${accentColors.border} ${accentColors.bg} p-3 shadow-lg backdrop-blur-xl transition-all duration-300 ${accentColors.hover} group/btn hover:scale-110`}
-                          >
-                            <ArrowUpRight
-                              className={`h-5 w-5 ${accentColors.text} transition-transform duration-300 group-hover/btn:rotate-12`}
-                            />
-                          </a>
+                    {/* Description - always capped to 3 lines so every card stays the same height */}
+                    <p className="mb-6 line-clamp-3 leading-relaxed text-slate-600 dark:text-slate-300">
+                      {project.description}
+                    </p>
 
-                          {/* Status Badge */}
-                          <div className="absolute bottom-6 left-6">
-                            <span
-                              className={`rounded-full border px-4 py-2 text-sm font-medium shadow-lg backdrop-blur-xl ${getStatusColor(project.status)}`}
-                            >
-                              <div className="mr-2 inline-block h-2 w-2 rounded-full bg-current"></div>
-                              {project.status}
-                            </span>
-                          </div>
+                    {/* Technologies - capped count keeps this row consistent across cards */}
+                    {project.technologies && (
+                      <div className="mt-auto space-y-3">
+                        <div className={`flex items-center gap-2 ${accentColors.text}`}>
+                          <Zap className="h-4 w-4" />
+                          <span className="text-sm font-medium">Tech Arsenal</span>
                         </div>
 
-                        {/* Content Section */}
-                        <div className="relative flex-1 p-8 lg:p-10">
-                          {/* Header */}
-                          <div className="mb-6">
-                            <div className="mb-3 flex items-center justify-between">
-                              <h3 className="text-2xl font-bold text-slate-800 dark:text-cyan-200 lg:text-3xl">
-                                {project.title}
-                              </h3>
-                              <Eye
-                                className={`h-5 w-5 ${accentColors.text} opacity-0 transition-all duration-300 group-hover:opacity-100`}
-                              />
-                            </div>
-                            <p className={`text-sm font-medium ${accentColors.text}`}>{project.category}</p>
-                          </div>
-
-                          {/* Description */}
-                          <div className="mb-8 flex-1">
-                            <p
-                              ref={(el) => {
-                                descriptionRefs.current[index] = el;
-                              }}
-                              className={`leading-relaxed text-slate-600 dark:text-slate-300 ${!expandedCards.includes(index) ? 'line-clamp-3' : ''}`}
+                        <div className="flex flex-wrap gap-2">
+                          {visibleTechs.map((tech, techIndex) => (
+                            <span
+                              key={techIndex}
+                              className="rounded-full border border-blue-200/60 bg-blue-50/80 px-3 py-1 text-xs font-medium text-blue-500 shadow-sm backdrop-blur-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-blue-300/60 hover:bg-blue-100/80 dark:border-slate-700/60 dark:bg-slate-800/80 dark:text-cyan-200 dark:hover:border-cyan-400/60 dark:hover:bg-slate-900/80"
                             >
-                              {project.description}
-                            </p>
-
-                            {/* CONDITIONAL READ MORE FEATURE
-                              Only show "Read more" button when text actually exceeds 3 lines.
-                              isTruncated[index] is true when scrollHeight > clientHeight for this description.
-                          */}
-                            {isTruncated[index] && (
-                              <button
-                                onClick={(e) => {
-                                  // CLICKABLE CARD FEATURE - stopPropagation prevents card click
-                                  // This ensures "Read more" only toggles text, doesn't navigate to project
-                                  e.stopPropagation();
-                                  toggleCard(index);
-                                }}
-                                className={`group/read mt-4 inline-flex items-center gap-2 text-sm font-medium ${accentColors.text} transition-all duration-300 hover:translate-x-1 hover:text-slate-800 dark:hover:text-cyan-100`}
-                              >
-                                {expandedCards.includes(index) ? 'Show less' : 'Read more'}
-                                <ChevronRight
-                                  className={`h-4 w-4 transition-transform duration-300 ${expandedCards.includes(index) ? 'rotate-90' : 'group-hover/read:translate-x-1'}`}
-                                />
-                              </button>
-                            )}
-                          </div>
-
-                          {/* Technologies */}
-                          {project.technologies && (
-                            <div className="hidden space-y-4 md:block">
-                              <div className={`flex items-center gap-2 ${accentColors.text}`}>
-                                <Zap className="h-4 w-4" />
-                                <span className="text-sm font-medium">Tech Arsenal</span>
-                              </div>
-
-                              <div className="flex flex-wrap gap-2">
-                                {project.technologies.map((tech, techIndex) => (
-                                  <span
-                                    key={techIndex}
-                                    className="rounded-full border border-blue-200/60 bg-blue-50/80 px-4 py-2 text-xs font-medium text-blue-500 shadow-sm backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 hover:scale-105 hover:border-blue-300/60 hover:bg-blue-100/80 hover:shadow-md dark:border-slate-700/60 dark:bg-slate-800/80 dark:text-cyan-200 dark:hover:border-cyan-400/60 dark:hover:bg-slate-900/80"
-                                  >
-                                    {tech}
-                                  </span>
-                                ))}
-                              </div>
-                            </div>
+                              {tech}
+                            </span>
+                          ))}
+                          {extraTechCount > 0 && (
+                            <span className="rounded-full border border-blue-200/60 bg-blue-50/80 px-3 py-1 text-xs font-medium text-blue-500 shadow-sm backdrop-blur-sm dark:border-slate-700/60 dark:bg-slate-800/80 dark:text-cyan-200">
+                              +{extraTechCount} more
+                            </span>
                           )}
                         </div>
                       </div>
-                    </div>
-                  </SwiperSlide>
-                );
-              })}
-          </Swiper>
+                    )}
+                  </div>
+                </div>
+              </motion.div>
+            );
+          })}
         </div>
       </div>
     </section>
@@ -355,44 +203,3 @@ const ProjectSection = () => {
 };
 
 export default ProjectSection;
-
-<style jsx>{`
-  @keyframes fade-in {
-    from {
-      opacity: 0;
-      transform: translateY(30px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
-  @keyframes slide-up {
-    from {
-      opacity: 0;
-      transform: translateY(60px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
-  .animate-fade-in {
-    animation: fade-in 0.8s ease-out forwards;
-    opacity: 0;
-  }
-
-  .animate-slide-up {
-    animation: slide-up 0.8s ease-out forwards;
-    opacity: 0;
-  }
-
-  .line-clamp-3 {
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-  }
-`}</style>;

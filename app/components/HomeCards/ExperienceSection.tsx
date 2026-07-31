@@ -1,5 +1,6 @@
-import React, { useState, useRef } from 'react';
-import { Calendar, MapPin, ExternalLink, ChevronRight, Briefcase, Award, TrendingUp } from 'lucide-react';
+import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Calendar, MapPin, ExternalLink, ChevronRight, Briefcase, Award } from 'lucide-react';
 
 interface Experience {
   id: number;
@@ -16,7 +17,6 @@ interface Experience {
 
 const ExperienceSection: React.FC = () => {
   const [activeCard, setActiveCard] = useState<number | null>(null);
-  const observerRef = useRef<IntersectionObserver | null>(null);
 
   const experiences: Experience[] = [
     {
@@ -71,13 +71,6 @@ const ExperienceSection: React.FC = () => {
     },
   ];
 
-  const cardRef = (element: HTMLDivElement | null, id: number) => {
-    if (element && observerRef.current) {
-      element.setAttribute('data-card-id', id.toString());
-      observerRef.current.observe(element);
-    }
-  };
-
   const getTypeColor = (type: Experience['type']) => {
     const colors = {
       'full-time':
@@ -111,11 +104,13 @@ const ExperienceSection: React.FC = () => {
           <div className="absolute bottom-0 left-1/2 top-0 w-px transform bg-gradient-to-b from-blue-400/60 via-sky-400/60 to-cyan-400/60 md:left-8"></div>
 
           {experiences.map((exp, index) => (
-            <div
+            <motion.div
               key={exp.id}
-              ref={(el) => cardRef(el, exp.id)}
-              className={`relative mb-12 transition-all duration-1000 md:mb-16`}
-              style={{ transitionDelay: `${index * 200}ms` }}
+              className="relative mb-12 md:mb-16"
+              initial={{ opacity: 0, y: 50 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: '-100px' }}
+              transition={{ duration: 0.6, delay: index * 0.15, ease: 'easeOut' }}
             >
               {/* Timeline dot - Always on left */}
               <div className="absolute left-1/2 z-10 h-4 w-4 -translate-x-2 transform rounded-full bg-gradient-to-r from-blue-500 to-cyan-500 shadow-lg shadow-blue-500/25 md:left-8">
@@ -125,13 +120,11 @@ const ExperienceSection: React.FC = () => {
               {/* Card - Always on right */}
               <div className="md:ml-16">
                 <div
-                  className={`group relative cursor-pointer transition-all duration-500`}
+                  className="group relative cursor-pointer transition-transform duration-300 hover:-translate-y-1"
                   onClick={() => setActiveCard(activeCard === exp.id ? null : exp.id)}
-                  onMouseEnter={() => setActiveCard(exp.id)}
-                  onMouseLeave={() => setActiveCard(null)}
                 >
                   {/* Glassmorphism card */}
-                  <div className="relative overflow-hidden rounded-2xl border border-blue-200/30 bg-white/70 p-6 shadow-xl shadow-blue-500/10 backdrop-blur-xl dark:border-slate-700/50 dark:bg-slate-900/80 dark:shadow-cyan-900/10 md:p-8">
+                  <div className="relative overflow-hidden rounded-2xl border border-blue-200/30 bg-white/70 p-6 shadow-xl shadow-blue-500/10 backdrop-blur-xl transition-shadow duration-300 group-hover:shadow-2xl group-hover:shadow-blue-500/20 dark:border-slate-700/50 dark:bg-slate-900/80 dark:shadow-cyan-900/10 dark:group-hover:shadow-cyan-500/20 md:p-8">
                     {/* Gradient overlay */}
                     <div className="from-blue-500/8 to-cyan-500/8 absolute inset-0 bg-gradient-to-br via-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100 dark:from-blue-900/10 dark:to-cyan-900/10"></div>
 
@@ -172,26 +165,36 @@ const ExperienceSection: React.FC = () => {
                       <p className="mb-4 leading-relaxed text-slate-700 dark:text-slate-300">{exp.description}</p>
 
                       {/* Achievements */}
-                      <div
-                        className={`overflow-hidden transition-all duration-500 ${
-                          activeCard === exp.id ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
-                        }`}
-                      >
-                        <div className="mb-4">
-                          <h4 className="mb-3 flex items-center gap-2 text-sm font-semibold text-cyan-600 dark:text-cyan-300">
-                            <Award className="h-4 w-4" />
-                            Key Achievements
-                          </h4>
-                          <ul className="space-y-2">
-                            {exp.achievements.map((achievement, i) => (
-                              <li key={i} className="flex items-start gap-2 text-sm text-slate-600 dark:text-slate-400">
-                                <ChevronRight className="mt-0.5 h-3 w-3 flex-shrink-0 text-cyan-500" />
-                                <span>{achievement}</span>
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-                      </div>
+                      <AnimatePresence initial={false}>
+                        {activeCard === exp.id && (
+                          <motion.div
+                            key="achievements"
+                            initial={{ height: 0, opacity: 0 }}
+                            animate={{ height: 'auto', opacity: 1 }}
+                            exit={{ height: 0, opacity: 0 }}
+                            transition={{ duration: 0.35, ease: 'easeInOut' }}
+                            className="overflow-hidden"
+                          >
+                            <div className="mb-4">
+                              <h4 className="mb-3 flex items-center gap-2 text-sm font-semibold text-cyan-600 dark:text-cyan-300">
+                                <Award className="h-4 w-4" />
+                                Key Achievements
+                              </h4>
+                              <ul className="space-y-2">
+                                {exp.achievements.map((achievement, i) => (
+                                  <li
+                                    key={i}
+                                    className="flex items-start gap-2 text-sm text-slate-600 dark:text-slate-400"
+                                  >
+                                    <ChevronRight className="mt-0.5 h-3 w-3 flex-shrink-0 text-cyan-500" />
+                                    <span>{achievement}</span>
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
 
                       {/* Technologies */}
                       <div className="flex flex-wrap gap-2">
@@ -220,31 +223,7 @@ const ExperienceSection: React.FC = () => {
                   </div>
                 </div>
               </div>
-            </div>
-          ))}
-        </div>
-
-        {/* Stats section */}
-        <div className="mt-20 grid grid-cols-1 gap-6 md:grid-cols-3">
-          {[
-            { icon: Briefcase, label: 'Years Experience', value: '4+', color: 'blue' },
-            { icon: Award, label: 'Projects Delivered', value: '25+', color: 'sky' },
-            { icon: TrendingUp, label: 'Performance Increase', value: '40%', color: 'cyan' },
-          ].map((stat, i) => (
-            <div
-              key={i}
-              className="group rounded-xl border border-blue-200/30 bg-white/70 p-6 text-center shadow-lg shadow-blue-500/10 backdrop-blur-xl transition-all duration-300 hover:bg-white/90 dark:border-slate-700/50 dark:bg-slate-900/70 dark:text-cyan-200 hover:dark:bg-slate-900/80"
-            >
-              <div
-                className={`inline-flex h-12 w-12 items-center justify-center rounded-full bg-${stat.color}-100 text-${stat.color}-600 mb-4 transition-transform group-hover:scale-110 dark:bg-${stat.color}-900/40 dark:text-${stat.color}-300`}
-              >
-                <stat.icon className="h-6 w-6" />
-              </div>
-              <div className={`text-2xl font-bold text-${stat.color}-600 mb-1 dark:text-${stat.color}-300`}>
-                {stat.value}
-              </div>
-              <div className="text-sm text-slate-500 dark:text-slate-400">{stat.label}</div>
-            </div>
+            </motion.div>
           ))}
         </div>
       </div>

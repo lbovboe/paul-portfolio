@@ -415,7 +415,7 @@ const SkillSection = () => {
           >
             {filteredSkills.map((skill, index) => (
               <motion.div key={`${skill.name}-${activeCategory}`} variants={skillVariants} className="group relative">
-                <div className="relative h-full overflow-hidden rounded-2xl border border-blue-200/50 bg-white/70 p-6 shadow-lg backdrop-blur-xl transition-all duration-500 dark:border-slate-700/50 dark:bg-slate-900/70">
+                <div className="relative h-full overflow-hidden rounded-2xl border border-blue-200/50 bg-white/70 p-6 shadow-lg backdrop-blur-xl transition-all duration-500 hover:-translate-y-1.5 hover:shadow-2xl hover:shadow-blue-500/20 dark:border-slate-700/50 dark:bg-slate-900/70 dark:hover:shadow-cyan-500/20">
                   {/* Gradient Overlay */}
                   <div
                     className={`absolute inset-0 bg-gradient-to-br ${categoryColors[skill.category as Category]} opacity-0 transition-opacity duration-500 group-hover:opacity-10 dark:from-cyan-900 dark:to-blue-900`}
@@ -461,45 +461,6 @@ const SkillSection = () => {
             ))}
           </motion.div>
         </AnimatePresence>
-
-        {/* Stats */}
-        <motion.div
-          initial={{ opacity: 0, y: 50 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8, delay: 0.4 }}
-          className="mt-16 hidden grid-cols-2 gap-6 md:grid md:grid-cols-4"
-        >
-          {[
-            { label: 'Frontend', count: skills.filter((s) => s.category === 'Frontend').length, icon: '🎨' },
-            { label: 'Backend', count: skills.filter((s) => s.category === 'Backend').length, icon: '⚡' },
-            { label: 'AI & Agentic AI', count: skills.filter((s) => s.category === 'AI').length, icon: '🤖' },
-            {
-              label: 'Cloud & DevOps',
-              count:
-                skills.filter((s) => s.category === 'Cloud').length +
-                skills.filter((s) => s.category === 'DevOps').length,
-              icon: '☁️',
-            },
-          ].map((stat, index) => (
-            <div
-              key={index}
-              className="rounded-2xl border border-blue-200/50 bg-white/70 p-6 text-center backdrop-blur-xl dark:border-slate-700/50 dark:bg-slate-900/70"
-            >
-              <div className="mb-2 text-3xl">{stat.icon}</div>
-              <motion.div
-                className="mb-1 text-3xl font-bold text-blue-800 dark:text-cyan-200"
-                initial={{ opacity: 0, scale: 0.5 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-              >
-                {stat.count}+
-              </motion.div>
-              <div className="text-sm font-medium text-blue-600 dark:text-cyan-300">{stat.label}</div>
-            </div>
-          ))}
-        </motion.div>
       </div>
     </section>
   );
